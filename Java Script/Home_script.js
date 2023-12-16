@@ -5,6 +5,15 @@ window.onload = function () {
     document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
 
 
+//  Input Only number entering scrpit...... 
+
+document.querySelectorAll('input[type="number"]').forEach( input => {
+  input.oninput = () =>{
+      if(input.value.length > input.maxLength) input.value = input.value.slice(0,input.maxLength);
+  }; 
+})
+      
+
 
 // var name =  localStorage.getItem('Login-UserName');
 // var email = localStorage.getItem('Login-Email');
@@ -15,17 +24,17 @@ window.onload = function () {
 
     var user_id = localStorage.getItem('User-ID');
 
-    let JwtToken = localStorage.getItem('JWT_Token');
+    //let JwtToken = localStorage.getItem('JWT_Token');
 
-    fetch(`http://3.108.240.106:8097/user/getBy/${user_id}`, 
+    fetch(`http://3.108.240.106:8097/user/getBy/${user_id}`)
 
     
-    {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${JwtToken}`
-      }
-    })
+    // {
+    //   method: 'GET',
+    //   headers: {
+    //     'Authorization': `Bearer ${JwtToken}`
+    //   }
+    // })
     .then(response => response.json())
     .then(data => {  console.log(data) 
 
@@ -37,9 +46,6 @@ window.onload = function () {
 })
 
 
-
-
-      
 //               Home Hotel  Api calls 
 
 document.getElementById('home_our_hotel_loader').style.display = "block";
@@ -68,7 +74,9 @@ fetch('http://3.108.240.106:8097/hotels/getAllHotels')
                 <span class="rating_span">${product.rating}</span>
             </div>
             <p class="hotel_name home_hotelName">${product.hotelName}</p>
-            <i class="fa fa-user" aria-hidden="true"></i> <span class="profile_num">${product.totalPerson}</span>
+            <i class="fa fa-user" aria-hidden="true"></i>
+             <span class="profile_num">${product.totalPerson}</span>
+             <span class="hotel_type">${product.hotelType}</span>
             <br>
             <span class="hotel_price">&#8377; ${product.price}</span>
             <input type="button" class="home_hotelBtn" id="hotel_btn" onclick="BookHotel_fromHome()" value="Book Now">
@@ -98,7 +106,7 @@ fetch('http://3.108.240.106:8097/hotels/getAllHotels')
 
 document.getElementById('home_TopVisitedplaces_loader').style.display = "block";
 
-fetch('http://3.108.240.106:8097/guide/AllGuides')
+fetch('http://3.108.240.106:8097/guide/allGuides')
 .then(response => response.json())
 .then(data => {  console.log(data.data[0]) 
 
@@ -131,6 +139,439 @@ fetch('http://3.108.240.106:8097/guide/AllGuides')
           } )
 
 })
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//                    Puja Module  API calls here .....
+
+
+document.getElementById('Pujabooking_TraditionalPujas_loader').style.display = "block";
+
+fetch('http://3.108.240.106:8097/poja/getAllPoja')
+.then(response => response.json())
+.then(data => {  console.log(data.data[0])
+ 
+  document.getElementById('Pujabooking_TraditionalPujas_loader').style.display = "none";
+
+  let data2 = "";
+ 
+  data.data.map( (product) => {
+ 
+    data2 +=`
+                            <div class="swiper-slide puja_slides_up">
+                                <div class="Traditional_Pujas_div sateesh">
+                                    <img src="http://3.108.240.106:8097/poja/display/custom?id=${product.id}" class="Traditional_Pujas_imgs"
+                                        alt="">
+                                    <p class="puja_name pujanames_oncard">${product.poojaName}</p>
+                                    <div class="Location_pujaname_div">
+                                        <img src="../Images/Location icon.png" class="Traditional_location_img" alt="">
+                                        <span class="Temple_name">${product.templeName}</span>
+                                    </div>
+ 
+                                    <span class="puja_price" id="first_puja_price">&#8377; ${product.price}</span>
+                                    <input type="button" class="puja_booknow_btn puja-api-button01" value="Book Now"
+                                        onclick="pujaPackageBooking()">
+                                </div>
+                            </div>
+ 
+       `;
+ 
+            document.getElementById("swiper-wrapper_puja_up").innerHTML = data2;
+            // console.log(data2);
+ 
+          } )
+ 
+});
+
+
+
+document.getElementById('ujjain_Famous_loader').style.display = "block";
+
+fetch('http://3.108.240.106:8097/poja/getAllPoja')
+.then(response => response.json())
+.then(data => {  console.log(data.data[0])
+ 
+ document.getElementById('ujjain_Famous_loader').style.display = "none";
+
+  let data2 = "";
+ 
+  data.data.map( (product) => {
+ 
+    data2 +=`
+                           
+    <div class="swiper-slide ujjainFamous_puja">
+                                <div class="Ujjain_FamousPujas_div">
+                                    <img src="http://3.108.240.106:8097/poja/display/custom?id=${product.id}"  class="Ujjain_FamousPujas_imgs"
+                                        alt="" srcset="">
+                                    <p class="Famous_puja_name">${product.poojaName}</p>
+                                    <div class="Famous_Location_pujaname_div">
+                                        <img src="../Images/Location icon.png" class="Famous_location_img" alt="">
+                                        <span class="Famous_Temple_name">${product.templeName}</span>
+                                    </div>
+                                    <span class="Famous_puja_price">&#8377;${product.price} </span>
+                                    <input type="button" class="Famous_puja_booknow_btn" value="Book Now">
+                                </div>
+                            </div>
+ 
+       `;
+ 
+            document.getElementById("swiper-wrapper_puja_down").innerHTML = data2;
+            // console.log(data2);
+ 
+          } )
+ 
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//                    Ujjain Module  API calls here .....
+
+
+
+document.getElementById('UjjainDarshan_TopVisitedplaces_loader').style.display = "block";
+
+
+fetch('http://3.108.240.106:8097/guide/allGuides')
+.then(response => response.json())
+.then(data => {  console.log(data.data[0]) 
+
+  document.getElementById('UjjainDarshan_TopVisitedplaces_loader').style.display = "none";
+
+  let data2 = "";
+
+  data.data.map( (product) => {
+
+    data2 +=`
+    <div class="swiper-slide ujjain_swiperslides">
+
+      <div class="top_visited_contents_div">
+          <img src="http://3.108.240.106:8097/guide/displayHotelImage?id=${product.id}" class="ujjain-dharshan_imgs" alt="hotel_img1">
+          <div class="rating_div">
+              <i class="fa fa-star checked"></i>
+              <span class="rating_span">${product.rating}</span>
+          </div>
+          <h3 class="ujjain_place_name">${product.name}</h3>
+          <div class="destinatio_km_div">
+              <img class="ujjain_desti_img" src="../Images/destination_popup_icon.png" alt="" srcset="">
+              <span class="ujjain_km">${product.distance} km</span>
+              <span class="ujjainprice">&#8377; ${product.price} </span>
+          </div>
+          <input type="button" id="UjjainCard_click" class="Topvisited_ujjain_btn" value="Book a Guide" onclick="ujjainFirstcard()" ondblclick="ujjainFirstcard_dbl()" >
+      </div>
+               
+    </div> `;
+  
+            document.getElementById("swiper-wrapper_ujjain_up").innerHTML = data2;
+            // console.log(data2);
+  
+          } )
+
+          document.getElementById('UjjainCard_click').click();
+})
+
+
+
+            //  Ujjain Hotel  Api calls 
+
+            document.getElementById('UjjainDarshan_hotels_loader_loader').style.display = "block";
+
+
+fetch('http://3.108.240.106:8097/hotels/getAllHotels')
+.then(response => response.json())
+.then(data => {  console.log(data.data) 
+  document.getElementById('UjjainDarshan_hotels_loader_loader').style.display = "none";
+
+  let data2 = "";
+
+  data.data.map( (product) => {
+
+    data2 +=`
+
+    <div class="swiper-slide ujjan_slides_down">
+    <div id="home_top_rated_div">
+        <img src="http://3.108.240.106:8097/hotels/displayHotelImage?id=${product.id}" class="home_top_img1" alt="image1">
+        <div class="top_visited_rating_div">
+            <i class="fa fa-star checked" id="icon"></i>
+            <span class="top_visited_rating_span">${product.rating}</span>
+        </div>
+        <p class="top_visited_hotel_name small_hotel_name">${product.hotelName} </p>
+        <i class="fa fa-user" aria-hidden="true"></i>
+        <span class="top-visited-km">${product.totalPerson} </span>       <br>
+
+        <div class="price_book_holes_in_small">
+            <p class="hotel_price_in_small">&#8377;${product.price}</p>
+            <input type="button" class="small_hotel_book_btn" value="Book Hotel">
+        </div>
+        
+    </div>
+</div>
+  
+  
+    `;
+  
+            document.getElementById("swiper-wrapper_ujjain_down").innerHTML = data2;
+            // console.log(data2);
+  
+          } )
+         
+
+
+})
+
+
+
+//                  Omkar Module  API calls from here ......
+
+ 
+
+  document.getElementById('Omkar_TopVisited_loader').style.display = "block";
+
+      fetch('http://3.108.240.106:8097/omkareshwar/getAll/omkareshwar')
+      .then(response => response.json())
+      .then(data => {  console.log(data.data[0]) 
+        document.getElementById('Omkar_TopVisited_loader').style.display = "none";
+
+        let data2 = "";
+        data.data.map( (product) => {
+
+          data2 +=`
+          <div class="swiper-slide ujjain_swiperslides">
+
+            <div class="top_visited_contents_div">
+                <img src="http://3.108.240.106:8097/omkareshwar/displayHotelImage?id=${product.id}" class="ujjain-dharshan_imgs" alt="hotel_img1">
+                <div class="rating_div">
+                    <i class="fa fa-star checked"></i>
+                    <span class="rating_span">${product.rating}</span>
+                </div>
+                <h3 class="ujjain_place_name OmkarName">${product.name}</h3>
+                <div class="destinatio_km_div">
+                    <img class="ujjain_desti_img" src="../Images/destination_popup_icon.png" alt="" srcset="">
+                    <span class="ujjain_km">${product.distance} km</span>
+                    <span class="ujjainprice">&#8377; ${product.price} </span>
+                </div>
+                <input type="button" id="demo" class="Topvisited_ujjain_btn omkarbtn" value="Book a Guide" onclick="omkarFirstcard()" >
+            </div>
+                    
+          </div> `;
+        
+                  document.getElementById("swiper-wrapper_omkar_up").innerHTML = data2;
+                  // console.log(data2);
+                } )
+      })
+
+
+
+                 //  Omkar Hotel  Api calls 
+  
+ document.getElementById('Omkar_hotels_loader_loader').style.display = "block";
+
+fetch('http://3.108.240.106:8097/hotels/getAllHotels')
+.then(response => response.json())
+.then(data => {  console.log(data.data) 
+  document.getElementById('Omkar_hotels_loader_loader').style.display = "none";
+
+  let data2 = "";
+
+  data.data.map( (product) => {
+
+    data2 +=`
+
+    <div class="swiper-slide omkar_slides_down">
+      <div id="home_top_rated_div">
+          <img src="http://3.108.240.106:8097/hotels/displayHotelImage?id=${product.id}" class="home_top_img1" alt="image1">
+          <div class="top_visited_rating_div">
+              <i class="fa fa-star checked" id="icon"></i>
+              <span class="top_visited_rating_span">${product.rating}</span>
+          </div>
+          <p class="top_visited_hotel_name small_hotel_name">${product.hotelName}</p>
+          <i class="fa fa-user" aria-hidden="true"></i>
+          <span class="top-visited-km">${product.totalPerson} </span>       <br>
+          <div class="price_book_holes_in_small">
+              <p class="hotel_price_in_small">&#8377;${product.price}</p>
+              <input type="button" class="small_hotel_book_btn" value="Book Hotel">
+          </div>
+          
+      </div>
+    </div>
+  
+  
+    `;
+  
+            document.getElementById("swiper-wrapper_omkar_down").innerHTML = data2;
+            // console.log(data2);
+  
+          } )
+         
+
+
+})
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//       maabagla Module API from here .......
+
+
+  //               Maabaglamukhi Api calls 
+  document.getElementById('Maabagla_TopVisited_loader').style.display = "block";
+
+
+  fetch('http://3.108.240.106:8097/maaBaglamukhi/getAll/maaBaglamukhi')
+  .then(response => response.json())
+  .then(data => {  console.log(data.data[0]) 
+     
+    document.getElementById('Maabagla_TopVisited_loader').style.display = "none";
+
+    let data2 = "";
+    data.data.map( (product) => {
+
+      data2 +=`
+      <div class="swiper-slide ujjain_swiperslides Maabagla_slides">
+
+        <div class="top_visited_contents_div">
+            <img src="http://3.108.240.106:8097/maaBaglamukhi/displayHotelImage?id=${product.id}" class="ujjain-dharshan_imgs" alt="hotel_img1">
+            <div class="rating_div">
+                <i class="fa fa-star checked"></i>
+                <span class="rating_span">${product.rating}</span>
+            </div>
+            <h3 class="ujjain_place_name Maabagla_name">${product.name}</h3>
+            <div class="destinatio_km_div">
+                <img class="ujjain_desti_img" src="../Images/destination_popup_icon.png" alt="" srcset="">
+                <span class="ujjain_km">${product.distance} km</span>
+                <span class="ujjainprice">&#8377; ${product.price} </span>
+            </div>
+            <input type="button" id="demo" class="Topvisited_ujjain_btn Maabagla_btn" value="Book a Guide" onclick="maabagFirstcard()" >
+        </div>
+                
+      </div> `;
+    
+              document.getElementById("swiper-wrapper_maabag_up").innerHTML = data2;
+              // console.log(data2);
+            } )
+  })
+
+
+
+     //  MAAbgla Hotel  Api calls 
+
+document.getElementById('Maabagla_hotels_loader_loader').style.display = "block";
+console.log('hey')
+
+fetch('http://3.108.240.106:8097/hotels/getAllHotels')
+.then(response => response.json())
+.then(data => {  console.log(data.data) 
+
+document.getElementById('Maabagla_hotels_loader_loader').style.display = "none";
+
+
+let data2 = "";
+
+data.data.map( (product) => {
+
+data2 +=`
+
+<div class="swiper-slide maabag_slides_down">
+<div id="home_top_rated_div">
+    <img src="http://3.108.240.106:8097/hotels/displayHotelImage?id=${product.id}" class="home_top_img1" alt="image1">
+    <div class="top_visited_rating_div">
+        <i class="fa fa-star checked" id="icon"></i>
+        <span class="top_visited_rating_span">${product.rating}</span>
+    </div>
+    <p class="top_visited_hotel_name small_hotel_name"> ${product.hotelName}          </p>
+    <i class="fa fa-user" aria-hidden="true"></i>
+    <span class="top-visited-km">${product.totalPerson} </span>       <br>
+
+    <div class="price_book_holes_in_small">
+        <p class="hotel_price_in_small">&#8377;${product.price}</p>
+        <input type="button" class="small_hotel_book_btn" value="Book Hotel">
+    </div>
+    
+</div>
+</div>
+
+
+`;
+
+        document.getElementById("swiper-wrapper_maabag_down").innerHTML = data2;
+        // console.log(data2);
+
+      } )
+     
+
+
+})
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//   Shopping module API calls from here ................... 
+
+
+document.getElementById('Shopping_loader').style.display = "block";
+
+  fetch('http://3.108.240.106:8097/shopping/getAll/product')
+  .then(response => response.json())
+  .then(data => {  console.log(data.data) 
+  
+    document.getElementById('Shopping_loader').style.display = "none";
+
+    let data2 = "";
+  
+    data.data.map( (product) => {
+  
+      data2 +=`
+
+
+      <div class="swiper-slide swiper-slide-active shopping_slides" role="group" aria-label="1 / 7" >
+        <div class="Ujjain_FamousPujas_div shoppingdivs_contents">
+            <img src="http://3.108.240.106:8097/shopping/displayProductImage?id=${product.id}" class="Ujjain_FamousPujas_imgs shopimg" alt=""
+                srcset="">
+            <p class="Famous_puja_name shopping_name">${product.name}</p>
+            <span class="Famous_puja_price shopprice">&#8377; ${product.price} </span>
+            <input type="button" class="Famous_puja_booknow_btn shopbtn" onclick="shopping_btn()" value="Book Now">
+        </div>
+     </div>
+
+
+
+      `;
+    
+              document.getElementById("swiper-wrapper_shopping_down").innerHTML = data2;
+              // console.log(data2);
+    
+            } )
+  
+  })
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -306,8 +747,63 @@ console.log("View Profile Page ")
         })
 
 
-         
-  
+        let data6= '';                                                //      Airport Bookings  Display....
+        data.data.airport.map( (product) => {
+
+          console.log(product.from);
+
+          data6 +=`
+
+          <div class="child_divs ">
+          <div class="parent_taxi_bookings_div">
+             <div class="F_T_div"> <p class="p_tag_from_to">From :</p> <span class="hotel_names">${product.from}</span>  </div> 
+             <div class="F_T_div">  <p class="p_tag_from_to">To :</p> <span class="hotel_names">${product.to}</span> </div>
+              <p class="price taxiprice_in_vieprofile"> <span class="currency_symbol">&#8377;</span> ${product.totalprice} </p>
+          </div>
+      </div>
+              
+            `;
+              document.getElementById("AirportBook_inViewprofile").innerHTML = data6;     
+        })
+
+        let data7= '';                                                //      Shopping Bookings  Display....
+        data.data.shopBookings.map( (product) => {
+
+          console.log(product.shopping);
+
+          data7 +=`
+
+          <div class="child_divs ujjain_Bookings_divss">
+          <div><img src="http://3.108.240.106:8097/shopping/displayProductImage?id=${product.shopping.id}" class="visited_imgs" alt=""></div>
+          <div>
+              <h1 class="hotel_names"> ${product.shopping.name}</h1>
+              <p class="price"> <span class="currency_symbol">&#8377;</span> ${product.shopping.price} </p>
+          </div>
+      </div>
+
+              
+            `;
+              document.getElementById("ShoppingBKG_inViewprofile").innerHTML = data7;     
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     })
 
 
@@ -422,20 +918,45 @@ document.getElementById('Omkareshwar_main').style.display = "none";
 
           } else {
               //  block of code to be executed if the condition is false
-             
+             document.getElementById('Update_error_message').style.display = "block";
+             document.getElementById('Update_error_message').innerHTML = data.data;
           }
 
            
-        });
-        
-
-
-    })
-
+        });     
+      })
 }
 
 
 
+function myUpdate_user(){
+
+  const inpOb = document.getElementById('update-number03');
+    if (!inpOb.checkValidity()) {
+        document.getElementById("Update_error_message").style.display = "block";
+      document.getElementById("Update_error_message").innerHTML = "Number should be 10 digits";
+    } else {
+        document.getElementById("Update_error_message").style.display = "none";
+    //   document.getElementById("demo").innerHTML = "Input OK";
+    }
+
+
+}
+
+function myHotel_SaveMB(){
+
+  const inpOb = document.getElementById('hotel_save_mb');
+  if (!inpOb.checkValidity()) {
+      document.getElementById("hotel_save_eror").style.display = "block";
+    document.getElementById("hotel_save_eror").innerHTML = "Number should be 10 digits";
+  } else {
+      document.getElementById("hotel_save_eror").style.display = "none";
+  //   document.getElementById("demo").innerHTML = "Input OK";
+  }
+
+
+
+}
 
 
 
@@ -513,6 +1034,8 @@ function BookHotel_fromHome(){
           sessionStorage.setItem('hotel_id',data.data[0].id);
           document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
           document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
           document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
           document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
           document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
@@ -535,6 +1058,8 @@ function BookHotel_fromHome(){
         sessionStorage.setItem('hotel_id',data.data[0].id);
         document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
         document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+        document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+        document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
         document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
         document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
         document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
@@ -557,6 +1082,8 @@ function BookHotel_fromHome(){
           sessionStorage.setItem('hotel_id',data.data[0].id);
           document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
           document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
           document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
           document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
           document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
@@ -578,6 +1105,8 @@ function BookHotel_fromHome(){
           sessionStorage.setItem('hotel_id',data.data[0].id);
           document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
           document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
           document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
           document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
           document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
@@ -600,6 +1129,8 @@ function BookHotel_fromHome(){
           sessionStorage.setItem('hotel_id',data.data[0].id);
           document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
           document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
           document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
           document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
           document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
@@ -622,6 +1153,8 @@ function BookHotel_fromHome(){
           sessionStorage.setItem('hotel_id',data.data[0].id);
           document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
           document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
           document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
           document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
           document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
@@ -643,6 +1176,8 @@ function BookHotel_fromHome(){
           sessionStorage.setItem('hotel_id',data.data[0].id);
           document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
           document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
           document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
           document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
           document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
@@ -664,6 +1199,8 @@ function BookHotel_fromHome(){
           sessionStorage.setItem('hotel_id',data.data[0].id);
           document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
           document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
           document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
           document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
           document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
@@ -685,6 +1222,8 @@ function BookHotel_fromHome(){
           sessionStorage.setItem('hotel_id',data.data[0].id);
           document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
           document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
           document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
           document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
           document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
@@ -706,6 +1245,8 @@ function BookHotel_fromHome(){
           sessionStorage.setItem('hotel_id',data.data[0].id);
           document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
           document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
           document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
           document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
           document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
@@ -717,11 +1258,373 @@ function BookHotel_fromHome(){
         })
       })
       
+      document.getElementsByClassName("home_hotelBtn")[10].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[10].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      
+      document.getElementsByClassName("home_hotelBtn")[11].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[11].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      
+      document.getElementsByClassName("home_hotelBtn")[12].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[12].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      
+      document.getElementsByClassName("home_hotelBtn")[13].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[13].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      
+      document.getElementsByClassName("home_hotelBtn")[14].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[14].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      
+      document.getElementsByClassName("home_hotelBtn")[15].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[15].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+      document.getElementsByClassName("home_hotelBtn")[16].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[16].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      document.getElementsByClassName("home_hotelBtn")[17].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[17].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      document.getElementsByClassName("home_hotelBtn")[18].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[18].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      document.getElementsByClassName("home_hotelBtn")[19].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[19].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      document.getElementsByClassName("home_hotelBtn")[20].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[20].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      document.getElementsByClassName("home_hotelBtn")[21].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[21].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      document.getElementsByClassName("home_hotelBtn")[22].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[22].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
+
+      document.getElementsByClassName("home_hotelBtn")[23].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[23].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
 
 
+      document.getElementsByClassName("home_hotelBtn")[24].addEventListener('click', function(){
+        hotelBooking();
+        let name = document.getElementsByClassName('home_hotelName')[24].innerHTML ;
+        console.log(name);
+        fetch(`http://3.108.240.106:8097/hotels/getHotelWithBookings/${name}`)
+        .then(response => response.json())
+        .then(data => {  console.log(data.data[0])
+
+          sessionStorage.setItem('hotel_id',data.data[0].id);
+          document.getElementById('Book_hotel_name').innerHTML = data.data[0].hotelName;
+          document.getElementsByClassName('popup_hotel_name')[0].innerHTML = data.data[0].hotelName;
+          document.getElementById('Hotel_type_hotelbkgin_popup').innerHTML = data.data[0].hotelType ;
+          document.getElementById('Hotel_type_hotelbkg').innerHTML = data.data[0].hotelType ;
+          document.getElementsByClassName('hotelpersons')[0].innerHTML = data.data[0].totalPerson;
+          document.getElementById('Book_hotel_price').innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelprice_popup')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[0].innerHTML = ` &#8377; ${data.data[0].price}`;
+          document.getElementsByClassName('hotelsave_rate')[1].innerHTML = ` &#8377; ${data.data[0].price}`;
+
+          document.getElementById('popup_hotelbuid_img1').src = `http://3.108.240.106:8097/hotels/displayHotelImage?id=${data.data[0].id} ` 
+
+        })
+      })
 
 
-///////////   10 Hotels can book from Home Button...
+///////////   25 Hotels can book from Home Button...
 
 }
 
@@ -883,54 +1786,47 @@ console.log("Puja Page");
 
 
 
-document.getElementById('Pujabooking_TraditionalPujas_loader').style.display = "block";
+// document.getElementById('Pujabooking_TraditionalPujas_loader').style.display = "block";
 
-//let JwtToken = localStorage.getItem('JWT_Token');
+// //let JwtToken = localStorage.getItem('JWT_Token');
 
-let JwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4MTA2NzU3ODc5IiwiaWF0IjoxNzAyMjcyNTY4LCJleHAiOjE3MDIyNzQzNjh9.4xTKyOT9zEVYrxsNwrQO7EAOdxq0XZrJ22bsLu4ZqO0";
+// //let JwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4MTA2NzU3ODc5IiwiaWF0IjoxNzAyMjcyNTY4LCJleHAiOjE3MDIyNzQzNjh9.4xTKyOT9zEVYrxsNwrQO7EAOdxq0XZrJ22bsLu4ZqO0";
 
-fetch('http://3.108.240.106:8097/poja/getAllPoja',
-{
-  mode:"no-cors" 
-}
-)
+// fetch('http://3.108.240.106:8097/poja/getAllPoja')
+// .then(response => response.json())
+// .then(data => {  console.log(data.data[0])
+ 
+//   document.getElementById('Pujabooking_TraditionalPujas_loader').style.display = "none";
 
-
-
-.then(response => response.json())
-.then(data => {  console.log(data.data[0])
+//   let data2 = "";
  
-  document.getElementById('Pujabooking_TraditionalPujas_loader').style.display = "none";
-
-  let data2 = "";
+//   data.data.map( (product) => {
  
-  data.data.map( (product) => {
+//     data2 +=`
+//                             <div class="swiper-slide puja_slides_up">
+//                                 <div class="Traditional_Pujas_div sateesh">
+//                                     <img src="http://3.108.240.106:8097/poja/display/custom?id=${product.id}" class="Traditional_Pujas_imgs"
+//                                         alt="">
+//                                     <p class="puja_name pujanames_oncard">${product.poojaName}</p>
+//                                     <div class="Location_pujaname_div">
+//                                         <img src="../Images/Location icon.png" class="Traditional_location_img" alt="">
+//                                         <span class="Temple_name">${product.templeName}</span>
+//                                     </div>
  
-    data2 +=`
-                            <div class="swiper-slide puja_slides_up">
-                                <div class="Traditional_Pujas_div sateesh">
-                                    <img src="http://3.108.240.106:8097/poja/display/custom?id=${product.id}" class="Traditional_Pujas_imgs"
-                                        alt="">
-                                    <p class="puja_name pujanames_oncard">${product.poojaName}</p>
-                                    <div class="Location_pujaname_div">
-                                        <img src="../Images/Location icon.png" class="Traditional_location_img" alt="">
-                                        <span class="Temple_name">${product.templeName}</span>
-                                    </div>
+//                                     <span class="puja_price" id="first_puja_price">&#8377; ${product.price}</span>
+//                                     <input type="button" class="puja_booknow_btn puja-api-button01" value="Book Now"
+//                                         onclick="pujaPackageBooking()">
+//                                 </div>
+//                             </div>
  
-                                    <span class="puja_price" id="first_puja_price">&#8377; ${product.price}</span>
-                                    <input type="button" class="puja_booknow_btn puja-api-button01" value="Book Now"
-                                        onclick="pujaPackageBooking()">
-                                </div>
-                            </div>
+//        `;
  
-       `;
+//             document.getElementById("swiper-wrapper_puja_up").innerHTML = data2;
+//             // console.log(data2);
  
-            document.getElementById("swiper-wrapper_puja_up").innerHTML = data2;
-            // console.log(data2);
+//           } )
  
-          } )
- 
-});
+// });
 
 
 
@@ -1211,54 +2107,6 @@ function popup_packageBooking_btn(){
 
 
 
-// function Kuja_pujaBooking_Btn() {
-
-//   let pujaName =  document.getElementById('Kuja_puja_name').innerHTML; 
-//  document.getElementById('popup_pujabooking_name').innerHTML = pujaName;
-
-// let pujaPrice = document.getElementById('second_puja_price').innerHTML;
-// document.getElementById('booking_popup_total_price').innerHTML = pujaPrice;
-// document.getElementById('Confirmation_booking_popup_total_price').innerHTML = pujaPrice;
-
-
-//  document.getElementById('PujaBooking_popup').style.display = "block";    
-//  document.getElementById('PujaBooking_popup_div').style.display = "block";
-//  document.getElementById('PujaConfirmation_popup_div').style.display = "none";   
-
-
-// }
-
-
-// function Maha_pujaBooking_Btn(){
-//   let pujaName =  document.getElementById('Maha_puja_name').innerHTML; 
-//   document.getElementById('popup_pujabooking_name').innerHTML = pujaName;
-
-//   let pujaPrice = document.getElementById('third_puja_price').innerHTML;
-// document.getElementById('booking_popup_total_price').innerHTML = pujaPrice;
-// document.getElementById('Confirmation_booking_popup_total_price').innerHTML = pujaPrice;
-
-//   document.getElementById('PujaBooking_popup').style.display = "block";   
-//   document.getElementById('PujaBooking_popup_div').style.display = "block";
-//   document.getElementById('PujaConfirmation_popup_div').style.display = "none";   
-
-// }
-
-
-
-
-// function Rudra_pujaBooking_Btn(){
-//   let pujaName =  document.getElementById('Rudra_puja_name').innerHTML; 
-//   document.getElementById('popup_pujabooking_name').innerHTML = pujaName;
-
-//   let pujaPrice = document.getElementById('fourth_puja_price').innerHTML;
-// document.getElementById('booking_popup_total_price').innerHTML = pujaPrice;
-// document.getElementById('Confirmation_booking_popup_total_price').innerHTML = pujaPrice;
-
-//   document.getElementById('PujaBooking_popup').style.display = "block"; 
-//   document.getElementById('PujaBooking_popup_div').style.display = "block";
-//   document.getElementById('PujaConfirmation_popup_div').style.display = "none";     
-// }
-
 
 
 function popup_pujabook_btn(){
@@ -1299,104 +2147,6 @@ function UjjainDarshan() {
 
   
 //               Ujjain Api calls 
-
-document.getElementById('UjjainDarshan_TopVisitedplaces_loader').style.display = "block";
-
-
-fetch('http://3.108.240.106:8097/guide/AllGuides')
-.then(response => response.json())
-.then(data => {  console.log(data.data[0]) 
-
-  document.getElementById('UjjainDarshan_TopVisitedplaces_loader').style.display = "none";
-
-  let data2 = "";
-
-  data.data.map( (product) => {
-
-    data2 +=`
-    <div class="swiper-slide ujjain_swiperslides">
-
-      <div class="top_visited_contents_div">
-          <img src="http://3.108.240.106:8097/guide/displayHotelImage?id=${product.id}" class="ujjain-dharshan_imgs" alt="hotel_img1">
-          <div class="rating_div">
-              <i class="fa fa-star checked"></i>
-              <span class="rating_span">${product.rating}</span>
-          </div>
-          <h3 class="ujjain_place_name">${product.name}</h3>
-          <div class="destinatio_km_div">
-              <img class="ujjain_desti_img" src="../Images/destination_popup_icon.png" alt="" srcset="">
-              <span class="ujjain_km">${product.distance} km</span>
-              <span class="ujjainprice">&#8377; ${product.price} </span>
-          </div>
-          <input type="button" id="UjjainCard_click" class="Topvisited_ujjain_btn" value="Book a Guide" onclick="ujjainFirstcard()" ondblclick="ujjainFirstcard_dbl()" >
-      </div>
-               
-    </div> `;
-  
-            document.getElementById("swiper-wrapper_ujjain_up").innerHTML = data2;
-            // console.log(data2);
-  
-          } )
-
-          document.getElementById('UjjainCard_click').click();
-})
-
-
-
-            //  Ujjain Hotel  Api calls 
-
-            document.getElementById('UjjainDarshan_hotels_loader_loader').style.display = "block";
-
-
-fetch('http://3.108.240.106:8097/hotels/getAllHotels')
-.then(response => response.json())
-.then(data => {  console.log(data.data) 
-  document.getElementById('UjjainDarshan_hotels_loader_loader').style.display = "none";
-
-  let data2 = "";
-
-  data.data.map( (product) => {
-
-    data2 +=`
-
-    <div class="swiper-slide ujjan_slides_down">
-    <div id="home_top_rated_div">
-        <img src="http://3.108.240.106:8097/hotels/displayHotelImage?id=${product.id}" class="home_top_img1" alt="image1">
-        <div class="top_visited_rating_div">
-            <i class="fa fa-star checked" id="icon"></i>
-            <span class="top_visited_rating_span">${product.rating}</span>
-        </div>
-        <p class="top_visited_hotel_name small_hotel_name">${product.hotelName} </p>
-        <i class="fa fa-user" aria-hidden="true"></i>
-        <span class="top-visited-km">${product.totalPerson} </span>       <br>
-
-        <div class="price_book_holes_in_small">
-            <p class="hotel_price_in_small">&#8377;${product.price}</p>
-            <input type="button" class="small_hotel_book_btn" value="Book Hotel">
-        </div>
-        
-    </div>
-</div>
-  
-  
-    `;
-  
-            document.getElementById("swiper-wrapper_ujjain_down").innerHTML = data2;
-            // console.log(data2);
-  
-          } )
-         
-
-
-})
-
-
-
-
-
-
-
-
 
   console.log("Ujjain Darshan Page")
   document.getElementById('sidebar').style.height = "715px";
@@ -1539,7 +2289,7 @@ function first(){
        let name = document.getElementsByClassName('ujjain_place_name')[0].innerHTML ;
     
 
-fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
+fetch(`http://3.108.240.106:8097/guide/getByName/${name}`)
 .then(response => response.json())
 .then(data => {  console.log(data.data[0].name) 
 
@@ -1578,27 +2328,7 @@ fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
 document.getElementsByClassName('Topvisited_ujjain_btn')[1].addEventListener( "click",
 function (){
 
-  // document.getElementsByClassName('sec_packagediv')[0].style.visibility = "hidden";
-
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.backgroundColor = "#FF5F1F";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.color = "white";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.backgroundColor = "white";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.color = "#FF5F1F";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.backgroundColor = "white";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.color = "#FF5F1F";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.backgroundColor = "white";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.color = "#FF5F1F";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.backgroundColor = "white";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.color = "#FF5F1F";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.backgroundColor = "white";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.color = "#FF5F1F";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.backgroundColor = "white";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.color = "#FF5F1F";
-      // // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.backgroundColor = "white";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.color = "#FF5F1F";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.backgroundColor = "white";
-      // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.color = "#FF5F1F";
-
+ 
       document.getElementById('ujjain_popup').style.display = "block";
       document.getElementById('ujjain_popupdiv').style.display = "block";
       document.getElementById('ujjainConfirmation_popupdiv').style.display = "none";
@@ -1606,7 +2336,7 @@ function (){
       let name = document.getElementsByClassName('ujjain_place_name')[1].innerHTML ;
     
 
-      fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
+      fetch(`http://3.108.240.106:8097/guide/getByName/${name}`)
       .then(response => response.json())
       .then(data => {  console.log(data.data[0].name) 
       
@@ -1621,12 +2351,16 @@ function (){
 
           // image fetch 
 
-          fetch('http://3.108.240.106:8097/guide/AllGuides')
-          .then(response => response.json())
-          .then(data => {  console.log(data.data[1].id)  
-            document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=1${data.data[1].id}`
+          // fetch('http://3.108.240.106:8097/guide/allGuides')
+          // .then(response => response.json())
+          // .then(data => {  console.log(data.data[1].id)  
+          //   document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=1${data.data[1].id}`
   
-          })
+          // })
+
+          
+        let img = document.getElementsByClassName('ujjain-dharshan_imgs')[1].src;
+        document.getElementsByClassName('ujjainpopup_img')[0].src = img;
 
 
       
@@ -1665,7 +2399,7 @@ function (){
       let name = document.getElementsByClassName('ujjain_place_name')[2].innerHTML ;
      
       
-      fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
+      fetch(`http://3.108.240.106:8097/guide/getByName/${name}`)
       .then(response => response.json())
       .then(data => {  console.log(data.data[0].name) 
 
@@ -1679,13 +2413,16 @@ function (){
 
 
         // image fetch 
+        let img = document.getElementsByClassName('ujjain-dharshan_imgs')[2].src;
+        document.getElementsByClassName('ujjainpopup_img')[0].src = img;
 
-        fetch('http://3.108.240.106:8097/guide/AllGuides')
-        .then(response => response.json())
-        .then(data => {  console.log(data.data[2].id)  
-          document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[2].id}`
 
-        })
+        // fetch('http://3.108.240.106:8097/guide/allGuides')
+        // .then(response => response.json())
+        // .then(data => {  console.log(data.data[2].id)  
+        //   document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[2].id}`
+
+        // })
 
 
       })
@@ -1697,32 +2434,14 @@ function (){
 document.getElementsByClassName('Topvisited_ujjain_btn')[3].addEventListener( "click",
 function (){
 
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.backgroundColor = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.color = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.color = "#FF5F1F";
-
+   
     document.getElementById('ujjain_popup').style.display = "block";
     document.getElementById('ujjain_popupdiv').style.display = "block";
     document.getElementById('ujjainConfirmation_popupdiv').style.display = "none";
 
     let name = document.getElementsByClassName('ujjain_place_name')[3].innerHTML ;
   
-    fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
+    fetch(`http://3.108.240.106:8097/guide/getByName/${name}`)
   .then(response => response.json())
   .then(data => {  console.log(data.data[0].name); 
 
@@ -1737,13 +2456,17 @@ function (){
 
   // image fetch 
 
-  fetch('http://3.108.240.106:8097/guide/AllGuides')
-  .then(response => response.json())
-  .then(data => {  console.log(data.data[3].id)  
-    document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[3].id}`
+  let img = document.getElementsByClassName('ujjain-dharshan_imgs')[3].src;
+  document.getElementsByClassName('ujjainpopup_img')[0].src = img;
 
 
-  })
+  // fetch('http://3.108.240.106:8097/guide/allGuides')
+  // .then(response => response.json())
+  // .then(data => {  console.log(data.data[3].id)  
+  //   document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[3].id}`
+
+
+  // })
 
 
 })
@@ -1756,25 +2479,7 @@ function (){
 document.getElementsByClassName('Topvisited_ujjain_btn')[4].addEventListener( "click",
 function (){
 
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.backgroundColor = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.color = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.color = "#FF5F1F";
-
+   
     document.getElementById('ujjain_popup').style.display = "block";
     document.getElementById('ujjain_popupdiv').style.display = "block";
     document.getElementById('ujjainConfirmation_popupdiv').style.display = "none";
@@ -1782,7 +2487,7 @@ function (){
     let name = document.getElementsByClassName('ujjain_place_name')[4].innerHTML ;
     
 
-    fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
+    fetch(`http://3.108.240.106:8097/guide/getByName/${name}`)
 .then(response => response.json())
 .then(data => {  console.log(data.data[0].name) 
   sessionStorage.setItem("ujjain_ID",data.data[0].id );
@@ -1796,12 +2501,15 @@ function (){
 
       // image fetch 
 
-      fetch('http://3.108.240.106:8097/guide/AllGuides')
-      .then(response => response.json())
-      .then(data => {  console.log(data.data[4].id)  
-        document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[4].id}`
+      let img = document.getElementsByClassName('ujjain-dharshan_imgs')[4].src;
+      document.getElementsByClassName('ujjainpopup_img')[0].src = img;
 
-      })
+      // fetch('http://3.108.240.106:8097/guide/allGuides')
+      // .then(response => response.json())
+      // .then(data => {  console.log(data.data[4].id)  
+      //   document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[4].id}`
+
+      // })
 
 })
 
@@ -1837,7 +2545,7 @@ function (){
     let name = document.getElementsByClassName('ujjain_place_name')[5].innerHTML ;
     
 
-    fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
+    fetch(`http://3.108.240.106:8097/guide/getByName/${name}`)
   .then(response => response.json())
   .then(data => {  console.log(data.data[0].name) 
 
@@ -1850,13 +2558,16 @@ function (){
 
 
     // image fetch 
+    let img = document.getElementsByClassName('ujjain-dharshan_imgs')[5].src;
+    document.getElementsByClassName('ujjainpopup_img')[0].src = img;
 
-    fetch('http://3.108.240.106:8097/guide/AllGuides')
-    .then(response => response.json())
-    .then(data => {  console.log(data.data[5].id)  
-      document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[5].id}`
 
-    })
+    // fetch('http://3.108.240.106:8097/guide/allGuides')
+    // .then(response => response.json())
+    // .then(data => {  console.log(data.data[5].id)  
+    //   document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[5].id}`
+
+    // })
 
 
 })
@@ -1867,24 +2578,6 @@ function (){
 document.getElementsByClassName('Topvisited_ujjain_btn')[6].addEventListener( "click",
 function (){
 
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.backgroundColor = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.color = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.color = "#FF5F1F";
 
     document.getElementById('ujjain_popup').style.display = "block";
     document.getElementById('ujjain_popupdiv').style.display = "block";
@@ -1893,7 +2586,7 @@ function (){
     let name = document.getElementsByClassName('ujjain_place_name')[6].innerHTML ;
     
 
-    fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
+    fetch(`http://3.108.240.106:8097/guide/getByName/${name}`)
   .then(response => response.json())
   .then(data => {  console.log(data.data[0].name) 
     sessionStorage.setItem("ujjain_ID",data.data[0].id );
@@ -1905,13 +2598,15 @@ function (){
   document.getElementsByClassName('ujjainpopup_price')[2].innerHTML = `&#8377; ${data.data[0].price} ` ;
 
   // image fetch 
+  let img = document.getElementsByClassName('ujjain-dharshan_imgs')[6].src;
+  document.getElementsByClassName('ujjainpopup_img')[0].src = img;
 
-  fetch('http://3.108.240.106:8097/guide/AllGuides')
-  .then(response => response.json())
-  .then(data => {  console.log(data.data[6].id)  
-    document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[6].id}`
+  // fetch('http://3.108.240.106:8097/guide/allGuides')
+  // .then(response => response.json())
+  // .then(data => {  console.log(data.data[6].id)  
+  //   document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[6].id}`
 
-  })
+  // })
 
 
 })
@@ -1925,24 +2620,6 @@ function (){
 document.getElementsByClassName('Topvisited_ujjain_btn')[7].addEventListener( "click",
 function (){
 
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.backgroundColor = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.color = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.color = "#FF5F1F";
 
 
 
@@ -1953,7 +2630,7 @@ function (){
     let name = document.getElementsByClassName('ujjain_place_name')[7].innerHTML ;
     
 
-    fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
+    fetch(`http://3.108.240.106:8097/guide/getByName/${name}`)
 .then(response => response.json())
 .then(data => {  console.log(data.data[0].name) 
 
@@ -1966,12 +2643,15 @@ function (){
 
   // image fetch 
 
-  fetch('http://3.108.240.106:8097/guide/AllGuides')
-  .then(response => response.json())
-  .then(data => {  console.log(data.data[7].id)  
-    document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[7].id}`
+  let img = document.getElementsByClassName('ujjain-dharshan_imgs')[7].src;
+  document.getElementsByClassName('ujjainpopup_img')[0].src = img;
 
-  })
+  // fetch('http://3.108.240.106:8097/guide/allGuides')
+  // .then(response => response.json())
+  // .then(data => {  console.log(data.data[7].id)  
+  //   document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[7].id}`
+
+  // })
 
 
 })
@@ -1982,24 +2662,7 @@ function (){
 document.getElementsByClassName('Topvisited_ujjain_btn')[8].addEventListener( "click",
 function (){
 
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.backgroundColor = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.color = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.color = "#FF5F1F";
+ // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.color = "#FF5F1F";
 
     document.getElementById('ujjain_popup').style.display = "block";
     document.getElementById('ujjain_popupdiv').style.display = "block";
@@ -2008,7 +2671,7 @@ function (){
     let name = document.getElementsByClassName('ujjain_place_name')[8].innerHTML ;
     
 
-    fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
+    fetch(`http://3.108.240.106:8097/guide/getByName/${name}`)
 .then(response => response.json())
 .then(data => {  console.log(data.data[0].name) 
 
@@ -2021,13 +2684,16 @@ function (){
 
 
   // image fetch 
+  let img = document.getElementsByClassName('ujjain-dharshan_imgs')[8].src;
+  document.getElementsByClassName('ujjainpopup_img')[0].src = img;
 
-  fetch('http://3.108.240.106:8097/guide/AllGuides')
-  .then(response => response.json())
-  .then(data => {  console.log(data.data[8].id)  
-    document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[8].id}`
 
-  })
+  // fetch('http://3.108.240.106:8097/guide/allGuides')
+  // .then(response => response.json())
+  // .then(data => {  console.log(data.data[8].id)  
+  //   document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[8].id}`
+
+  // })
 
 })
 
@@ -2037,24 +2703,7 @@ function (){
 document.getElementsByClassName('Topvisited_ujjain_btn')[9].addEventListener( "click",
 function (){
   console.log("tenth guide");
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.backgroundColor = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[8].style.color = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[1].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[2].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[3].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[4].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[5].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[0].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[6].style.color = "#FF5F1F";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.backgroundColor = "white";
-    // document.getElementsByClassName('Topvisited_ujjain_btn')[7].style.color = "#FF5F1F";
+   
 
     document.getElementById('ujjain_popup').style.display = "block";
     document.getElementById('ujjain_popupdiv').style.display = "block";
@@ -2063,7 +2712,7 @@ function (){
     let name = document.getElementsByClassName('ujjain_place_name')[9].innerHTML ;
     
 
-    fetch(`http://3.108.240.106:8097/guide/GetByName/${name}`)
+    fetch(`http://3.108.240.106:8097/guide/getByName/${name}`)
 .then(response => response.json())
 .then(data => {  console.log(data.data) 
   sessionStorage.setItem("ujjain_ID",data.data[0].id );
@@ -2076,13 +2725,16 @@ function (){
 
 
   // image fetch 
+  let img = document.getElementsByClassName('ujjain-dharshan_imgs')[9].src;
+  document.getElementsByClassName('ujjainpopup_img')[0].src = img;
 
-  fetch('http://3.108.240.106:8097/guide/AllGuides')
-  .then(response => response.json())
-  .then(data => {  console.log(data.data[9].id)  
-    document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[9].id}`
 
-      })
+  // fetch('http://3.108.240.106:8097/guide/allGuides')
+  // .then(response => response.json())
+  // .then(data => {  console.log(data.data[9].id)  
+  //   document.getElementsByClassName('ujjainpopup_img')[0].src = `http://3.108.240.106:8097/guide/displayHotelImage?id=${data.data[9].id}`
+
+  //     })
       
     })
 
@@ -2152,97 +2804,14 @@ function ujjainConfirmation_closePopUp() {
   document.getElementById('ujjain_popup').style.display = "none";
   ujjainBooking_closePopUp();
 
+  document.getElementById('shopping_main').style.display = "none";
 }
 
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function Omkareshwar() {
   console.log("Omkareshwar  Page")
-
-  //               Omkar Api calls 
-
-  document.getElementById('Omkar_TopVisited_loader').style.display = "block";
-
-      fetch('http://3.108.240.106:8097/guide/AllGuides')
-      .then(response => response.json())
-      .then(data => {  console.log(data.data[0]) 
-        document.getElementById('Omkar_TopVisited_loader').style.display = "none";
-
-        let data2 = "";
-        data.data.map( (product) => {
-
-          data2 +=`
-          <div class="swiper-slide ujjain_swiperslides">
-
-            <div class="top_visited_contents_div">
-                <img src="http://3.108.240.106:8097/guide/displayHotelImage?id=${product.id}" class="ujjain-dharshan_imgs" alt="hotel_img1">
-                <div class="rating_div">
-                    <i class="fa fa-star checked"></i>
-                    <span class="rating_span">${product.rating}</span>
-                </div>
-                <h3 class="ujjain_place_name">${product.name}</h3>
-                <div class="destinatio_km_div">
-                    <img class="ujjain_desti_img" src="../Images/destination_popup_icon.png" alt="" srcset="">
-                    <span class="ujjain_km">${product.distance} km</span>
-                    <span class="ujjainprice">&#8377; ${product.price} </span>
-                </div>
-                <input type="button" id="demo" class="Topvisited_ujjain_btn omkarbtn" value="Book a Guide" onclick="omkarFirstcard()" >
-            </div>
-                    
-          </div> `;
-        
-                  document.getElementById("swiper-wrapper_omkar_up").innerHTML = data2;
-                  // console.log(data2);
-                } )
-      })
-
-
-
-                 //  Omkar Hotel  Api calls 
-  
- document.getElementById('Omkar_hotels_loader_loader').style.display = "block";
-
-fetch('http://3.108.240.106:8097/hotels/getAllHotels')
-.then(response => response.json())
-.then(data => {  console.log(data.data) 
-  document.getElementById('Omkar_hotels_loader_loader').style.display = "none";
-
-  let data2 = "";
-
-  data.data.map( (product) => {
-
-    data2 +=`
-
-    <div class="swiper-slide omkar_slides_down">
-      <div id="home_top_rated_div">
-          <img src="http://3.108.240.106:8097/hotels/displayHotelImage?id=${product.id}" class="home_top_img1" alt="image1">
-          <div class="top_visited_rating_div">
-              <i class="fa fa-star checked" id="icon"></i>
-              <span class="top_visited_rating_span">${product.rating}</span>
-          </div>
-          <p class="top_visited_hotel_name small_hotel_name">${product.hotelName}</p>
-          <i class="fa fa-user" aria-hidden="true"></i>
-          <span class="top-visited-km">${product.totalPerson} </span>       <br>
-          <div class="price_book_holes_in_small">
-              <p class="hotel_price_in_small">&#8377;${product.price}</p>
-              <input type="button" class="small_hotel_book_btn" value="Book Hotel">
-          </div>
-          
-      </div>
-    </div>
-  
-  
-    `;
-  
-            document.getElementById("swiper-wrapper_omkar_down").innerHTML = data2;
-            // console.log(data2);
-  
-          } )
-         
-
-
-})
 
 
 
@@ -2353,136 +2922,235 @@ document
 function omkarFirstcard() {
 
 
-  document.getElementById('omkar_popup').style.display = "block";
-  document.getElementById('omkar_popupdiv').style.display = "block";
-  document.getElementById('omkarConfirmation_popupdiv').style.display = "none";
+  document.getElementsByClassName('omkarbtn')[0].addEventListener( "click",
+  function (){
 
-  // document.getElementsByClassName('Topvisited_omkar_btn')[0].style.backgroundColor = "#FF5F1F";
-  // document.getElementsByClassName('Topvisited_omkar_btn')[0].style.color = "white";
-
+    document.getElementById('omkar_popup').style.display = "block";
+    document.getElementById('omkar_popupdiv').style.display = "block";
+    document.getElementById('omkarConfirmation_popupdiv').style.display = "none";
   
- 
-
-  fetch('http://3.108.240.106:8097/guide/AllGuides')
-  .then(response => response.json())
-  .then(data => {  console.log(data.data) 
+      let name = document.getElementsByClassName('OmkarName')[0].innerHTML ;
+      fetch(`http://3.108.240.106:8097/omkareshwar/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
   
-    let data2 = "";
-  
-    data.data.map( (product) => {
-  
-      data2 +=`
-  
-                <div class="puja_package_divs omkarpackagediv">
-                <img class="Package_imgs" src="http://3.108.240.106:8097/guide/displayHotelImage?id=${product.id}" alt="" srcset="">
-                <div>  
-                    <span class="omkarpujaNames">${product.name}</span>
-                    <div class="dis_price_div" >
-                        <img class="Package_location_img" src="../Images/destination_popup_icon.png" style="width: 19px;"  alt="" >
-                        <span class="Package_templeName" style="font-size: 11px;">${product.distance} km</span>
-                        <span class="Package_pricenum "  >&#8377; <span class="omkarprice"> ${product.price}</span>  </span>
-                    </div>
-                </div>
-                    <img class="omkar_delete_icon "  id="deleteomkarcard"  onclick="deleteomkarcard()"  src="../Images/delete_icon.png" alt="">
-            </div>
-       `;
+      sessionStorage.setItem("omkarID", data.data[0].id );
+      document.getElementsByClassName('omkarpujaNames')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('omkarkm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('omkarpopup_price')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('omkartotalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('omkartotalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
     
-              document.getElementById("omkar_guides_packages_divs").innerHTML = data2;
-               //console.log(product.price);
-
-              //  let total = [];
-              //  total.push(product.price);
-              //  console.log(total);
-    
-            } )
-
-            add_omkarprice();
-
+    // image fetch 
+    let OmkarID = sessionStorage.getItem('omkarID');
+    document.getElementsByClassName('omkarpopup_img')[0].src = `http://3.108.240.106:8097/omkareshwar/displayHotelImage?id=${OmkarID}`
  
-          //   let sum = 0;
-          //   for (let i = 0; i < data.data.length; i++) {
-          //     sum += data.data[i].price;
-          //     console.log(sum);
-          // }
-          document.getElementById("deleteomkarcard").click();
-        
-  
   })
+  });
+
+  document.getElementsByClassName('omkarbtn')[1].addEventListener( "click",
+  function (){
+
+    document.getElementById('omkar_popup').style.display = "block";
+    document.getElementById('omkar_popupdiv').style.display = "block";
+    document.getElementById('omkarConfirmation_popupdiv').style.display = "none";
+  
+      let name = document.getElementsByClassName('OmkarName')[1].innerHTML ;
+      fetch(`http://3.108.240.106:8097/omkareshwar/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("omkarID", data.data[0].id );
+      document.getElementsByClassName('omkarpujaNames')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('omkarkm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('omkarpopup_price')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('omkartotalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('omkartotalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+        let OmkarID = sessionStorage.getItem('omkarID');
+        document.getElementsByClassName('omkarpopup_img')[0].src = `http://3.108.240.106:8097/omkareshwar/displayHotelImage?id=${OmkarID}`
+       
+
+  })
+  });
+
+  document.getElementsByClassName('omkarbtn')[2].addEventListener( "click",
+  function (){
+
+    document.getElementById('omkar_popup').style.display = "block";
+    document.getElementById('omkar_popupdiv').style.display = "block";
+    document.getElementById('omkarConfirmation_popupdiv').style.display = "none";
+  
+      let name = document.getElementsByClassName('OmkarName')[2].innerHTML ;
+      fetch(`http://3.108.240.106:8097/omkareshwar/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("omkarID", data.data[0].id );
+      document.getElementsByClassName('omkarpujaNames')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('omkarkm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('omkarpopup_price')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('omkartotalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('omkartotalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let OmkarID = sessionStorage.getItem('omkarID');
+    document.getElementsByClassName('omkarpopup_img')[0].src = `http://3.108.240.106:8097/omkareshwar/displayHotelImage?id=${OmkarID}`
+  })
+  });
+
+  document.getElementsByClassName('omkarbtn')[3].addEventListener( "click",
+  function (){
+
+    document.getElementById('omkar_popup').style.display = "block";
+    document.getElementById('omkar_popupdiv').style.display = "block";
+    document.getElementById('omkarConfirmation_popupdiv').style.display = "none";
+  
+      let name = document.getElementsByClassName('OmkarName')[3].innerHTML ;
+      fetch(`http://3.108.240.106:8097/omkareshwar/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("omkarID", data.data[0].id );
+      document.getElementsByClassName('omkarpujaNames')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('omkarkm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('omkarpopup_price')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('omkartotalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('omkartotalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let OmkarID = sessionStorage.getItem('omkarID');
+    document.getElementsByClassName('omkarpopup_img')[0].src = `http://3.108.240.106:8097/omkareshwar/displayHotelImage?id=${OmkarID}`
+  })
+  });
+
+  document.getElementsByClassName('omkarbtn')[4].addEventListener( "click",
+  function (){
+
+    document.getElementById('omkar_popup').style.display = "block";
+    document.getElementById('omkar_popupdiv').style.display = "block";
+    document.getElementById('omkarConfirmation_popupdiv').style.display = "none";
+  
+      let name = document.getElementsByClassName('OmkarName')[4].innerHTML ;
+      fetch(`http://3.108.240.106:8097/omkareshwar/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("omkarID", data.data[0].id );
+      document.getElementsByClassName('omkarpujaNames')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('omkarkm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('omkarpopup_price')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('omkartotalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('omkartotalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let OmkarID = sessionStorage.getItem('omkarID');
+    document.getElementsByClassName('omkarpopup_img')[0].src = `http://3.108.240.106:8097/omkareshwar/displayHotelImage?id=${OmkarID}`
+  })
+  });
+
+  document.getElementsByClassName('omkarbtn')[5].addEventListener( "click",
+  function (){
+
+    document.getElementById('omkar_popup').style.display = "block";
+    document.getElementById('omkar_popupdiv').style.display = "block";
+    document.getElementById('omkarConfirmation_popupdiv').style.display = "none";
+  
+      let name = document.getElementsByClassName('OmkarName')[5].innerHTML ;
+      fetch(`http://3.108.240.106:8097/omkareshwar/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("omkarID", data.data[0].id );
+      document.getElementsByClassName('omkarpujaNames')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('omkarkm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('omkarpopup_price')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('omkartotalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('omkartotalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let OmkarID = sessionStorage.getItem('omkarID');
+    document.getElementsByClassName('omkarpopup_img')[0].src = `http://3.108.240.106:8097/omkareshwar/displayHotelImage?id=${OmkarID}`
+  })
+  });
+
+
+
+
+
+
   
 
 
+  }    
 
-
- 
-
-}
 
 
 function deleteomkarcard(){
   
 
-  document.getElementsByClassName('omkar_delete_icon')[0].addEventListener('click',
-  function(){
-  document.getElementsByClassName('omkarprice')[0].innerHTML = 0;
-  document.getElementsByClassName('omkarpackagediv')[0].style.display = "none";
-  add_omkarprice();
-  })
+  // document.getElementsByClassName('omkar_delete_icon')[0].addEventListener('click',
+  // function(){
+  // document.getElementsByClassName('omkarprice')[0].innerHTML = 0;
+  // document.getElementsByClassName('omkarpackagediv')[0].style.display = "none";
+  // add_omkarprice();
+  // })
 
-  document.getElementsByClassName('omkar_delete_icon')[1].addEventListener('click',
-  function(){
-  document.getElementsByClassName('omkarprice')[1].innerHTML = 0;
-  document.getElementsByClassName('omkarpackagediv')[1].style.display = "none";
-  add_omkarprice();
-  })
+  // document.getElementsByClassName('omkar_delete_icon')[1].addEventListener('click',
+  // function(){
+  // document.getElementsByClassName('omkarprice')[1].innerHTML = 0;
+  // document.getElementsByClassName('omkarpackagediv')[1].style.display = "none";
+  // add_omkarprice();
+  // })
 
-  document.getElementsByClassName('omkar_delete_icon')[2].addEventListener('click',
-  function(){
-  document.getElementsByClassName('omkarprice')[2].innerHTML = 0;
-  document.getElementsByClassName('omkarpackagediv')[2].style.display = "none";
-  add_omkarprice();
-  })
+  // document.getElementsByClassName('omkar_delete_icon')[2].addEventListener('click',
+  // function(){
+  // document.getElementsByClassName('omkarprice')[2].innerHTML = 0;
+  // document.getElementsByClassName('omkarpackagediv')[2].style.display = "none";
+  // add_omkarprice();
+  // })
 
-  document.getElementsByClassName('omkar_delete_icon')[3].addEventListener('click',
-  function(){
-  document.getElementsByClassName('omkarprice')[3].innerHTML = 0;
-  document.getElementsByClassName('omkarpackagediv')[3].style.display = "none";
-  add_omkarprice();
-  })
+  // document.getElementsByClassName('omkar_delete_icon')[3].addEventListener('click',
+  // function(){
+  // document.getElementsByClassName('omkarprice')[3].innerHTML = 0;
+  // document.getElementsByClassName('omkarpackagediv')[3].style.display = "none";
+  // add_omkarprice();
+  // })
 
-  document.getElementsByClassName('omkar_delete_icon')[4].addEventListener('click',
-  function(){
-  document.getElementsByClassName('omkarprice')[4].innerHTML = 0;
-  document.getElementsByClassName('omkarpackagediv')[4].style.display = "none";
-  add_omkarprice();
-  })
+  // document.getElementsByClassName('omkar_delete_icon')[4].addEventListener('click',
+  // function(){
+  // document.getElementsByClassName('omkarprice')[4].innerHTML = 0;
+  // document.getElementsByClassName('omkarpackagediv')[4].style.display = "none";
+  // add_omkarprice();
+  // })
 
-  document.getElementsByClassName('omkar_delete_icon')[5].addEventListener('click',
-  function(){
-  document.getElementsByClassName('omkarprice')[5].innerHTML = 0;
-  document.getElementsByClassName('omkarpackagediv')[5].style.display = "none";
-  add_omkarprice();
-  })
+  // document.getElementsByClassName('omkar_delete_icon')[5].addEventListener('click',
+  // function(){
+  // document.getElementsByClassName('omkarprice')[5].innerHTML = 0;
+  // document.getElementsByClassName('omkarpackagediv')[5].style.display = "none";
+  // add_omkarprice();
+  // })
 
-  document.getElementsByClassName('omkar_delete_icon')[6].addEventListener('click',
-  function(){
-  document.getElementsByClassName('omkarprice')[6].innerHTML = 0;
-  document.getElementsByClassName('omkarpackagediv')[6].style.display = "none";
-  add_omkarprice();
-  })
+  // document.getElementsByClassName('omkar_delete_icon')[6].addEventListener('click',
+  // function(){
+  // document.getElementsByClassName('omkarprice')[6].innerHTML = 0;
+  // document.getElementsByClassName('omkarpackagediv')[6].style.display = "none";
+  // add_omkarprice();
+  // })
 
-  document.getElementsByClassName('omkar_delete_icon')[7].addEventListener('click',
-  function(){
-  document.getElementsByClassName('omkarprice')[7].innerHTML = 0;
-  document.getElementsByClassName('omkarpackagediv')[7].style.display = "none";
-  add_omkarprice();
-  })
+  // document.getElementsByClassName('omkar_delete_icon')[7].addEventListener('click',
+  // function(){
+  // document.getElementsByClassName('omkarprice')[7].innerHTML = 0;
+  // document.getElementsByClassName('omkarpackagediv')[7].style.display = "none";
+  // add_omkarprice();
+  // })
 
-  document.getElementsByClassName('omkar_delete_icon')[8].addEventListener('click',
-  function(){
-  document.getElementsByClassName('omkarprice')[8].innerHTML = 0;
-  document.getElementsByClassName('omkarpackagediv')[8].style.display = "none";
-  add_omkarprice();
-  })
+  // document.getElementsByClassName('omkar_delete_icon')[8].addEventListener('click',
+  // function(){
+  // document.getElementsByClassName('omkarprice')[8].innerHTML = 0;
+  // document.getElementsByClassName('omkarpackagediv')[8].style.display = "none";
+  // add_omkarprice();
+  // })
 
 
 
@@ -2492,38 +3160,57 @@ function deleteomkarcard(){
 
 // adding omkar  prices 
 
-function add_omkarprice(){
+// function add_omkarprice(){
 
-  let a = parseInt(document.getElementsByClassName('omkarprice')[0].innerHTML);
-  let b = parseInt( document.getElementsByClassName('omkarprice')[1].innerHTML);
-  let c = parseInt( document.getElementsByClassName('omkarprice')[2].innerHTML);
-  // let d = parseInt(document.getElementsByClassName('omkarprice')[3].innerHTML);
-  // let e = parseInt( document.getElementsByClassName('omkarprice')[4].innerHTML);
-  // let f = parseInt( document.getElementsByClassName('omkarprice')[5].innerHTML);
-  // let g = parseInt(document.getElementsByClassName('omkarprice')[6].innerHTML);
-  // let h = parseInt( document.getElementsByClassName('omkarprice')[7].innerHTML);
-  // let i = parseInt( document.getElementsByClassName('omkarprice')[8].innerHTML);      // 9th product
-  //  let j = parseInt(document.getElementsByClassName('omkarprice')[9].innerHTML);    //10th product
-  // let k = parseInt( document.getElementsByClassName('omkarprice')[1].innerHTML);   11 product is add enable this
-  // let l = parseInt( document.getElementsByClassName('omkarprice')[2].innerHTML);
-let sum = a+b+c ;
+//   let a = parseInt(document.getElementsByClassName('omkarprice')[0].innerHTML);
+//   let b = parseInt( document.getElementsByClassName('omkarprice')[1].innerHTML);
+//   let c = parseInt( document.getElementsByClassName('omkarprice')[2].innerHTML);
+//   let d = parseInt(document.getElementsByClassName('omkarprice')[3].innerHTML);
+//   let e = parseInt( document.getElementsByClassName('omkarprice')[4].innerHTML);
+//   let f = parseInt( document.getElementsByClassName('omkarprice')[5].innerHTML);
+//   let g = parseInt(document.getElementsByClassName('omkarprice')[6].innerHTML);
+//   let h = parseInt( document.getElementsByClassName('omkarprice')[7].innerHTML);
+//   let i = parseInt( document.getElementsByClassName('omkarprice')[8].innerHTML);      // 9th product
+//    let j = parseInt(document.getElementsByClassName('omkarprice')[9].innerHTML);    //10th product
+//   // let k = parseInt( document.getElementsByClassName('omkarprice')[1].innerHTML);   11 product is add enable this
+//   // let l = parseInt( document.getElementsByClassName('omkarprice')[2].innerHTML);
+// let sum = a+b+c+d+e+f+g+h+i+j ;
 
-document.getElementsByClassName('omkartotalprice')[0].innerHTML = sum ;
-document.getElementsByClassName('omkartotalprice')[1].innerHTML = sum ;
+// document.getElementsByClassName('omkartotalprice')[0].innerHTML = sum ;
+// document.getElementsByClassName('omkartotalprice')[1].innerHTML = sum ;
 
-console.log(sum)
+// console.log(sum)
 
 
-}
+// }
 
 
 
 function omkarpackage_popup_btn() {
 
-  document.getElementById('omkarConfirmation_popupdiv').style.display = "block";
-  document.getElementById('omkar_popupdiv').style.display = "none";
+  var OmkarID = sessionStorage.getItem('omkarID');
+  var user_id = localStorage.getItem('User-ID');
+ 
+   var formdata = new FormData();
+   formdata.append("userId", user_id);
+   formdata.append("omkarId", OmkarID);
+   
+   var requestOptions = {
+     method: 'POST',
+     body: formdata,
+     redirect: 'follow'
+   };
+   
+   fetch("http://3.108.240.106:8097/admin/api/omkareshwar/book", requestOptions)
+     .then(response => response.json())
+     .then(result => {console.log(result)  
+    
+        document.getElementById('omkarConfirmation_popupdiv').style.display = "block";
+        document.getElementById('omkar_popupdiv').style.display = "none";
 
-         
+    })
+     .catch(error => console.log('error', error));
+ 
 
  
 }
@@ -2556,103 +3243,7 @@ function omkarConfirmation_closePopUp(){
 function MaaBaglamukhi() {
   console.log("MaaBaglamukhi  Page")
 
-      //               Maabaglamukhi Api calls 
-      document.getElementById('Maabagla_TopVisited_loader').style.display = "block";
-
-
-      fetch('http://3.108.240.106:8097/guide/AllGuides')
-      .then(response => response.json())
-      .then(data => {  console.log(data.data[0]) 
-         
-        document.getElementById('Maabagla_TopVisited_loader').style.display = "none";
-
-        let data2 = "";
-        data.data.map( (product) => {
-
-          data2 +=`
-          <div class="swiper-slide ujjain_swiperslides">
-
-            <div class="top_visited_contents_div">
-                <img src="http://3.108.240.106:8097/guide/displayHotelImage?id=${product.id}" class="ujjain-dharshan_imgs" alt="hotel_img1">
-                <div class="rating_div">
-                    <i class="fa fa-star checked"></i>
-                    <span class="rating_span">${product.rating}</span>
-                </div>
-                <h3 class="ujjain_place_name">${product.name}</h3>
-                <div class="destinatio_km_div">
-                    <img class="ujjain_desti_img" src="../Images/destination_popup_icon.png" alt="" srcset="">
-                    <span class="ujjain_km">${product.distance} km</span>
-                    <span class="ujjainprice">&#8377; ${product.price} </span>
-                </div>
-                <input type="button" id="demo" class="Topvisited_ujjain_btn omkarbtn" value="Book a Guide" onclick="maabagFirstcard()" >
-            </div>
-                    
-          </div> `;
-        
-                  document.getElementById("swiper-wrapper_maabag_up").innerHTML = data2;
-                  // console.log(data2);
-                } )
-      })
   
-
-
-         //  MAAbgla Hotel  Api calls 
-  document.getElementById('Maabagla_hotels_loader_loader').style.display = "block";
-
-
-fetch('http://3.108.240.106:8097/hotels/getallhotels')
-.then(response => response.json())
-.then(data => {  console.log(data.data) 
-
-  document.getElementById('Maabagla_hotels_loader_loader').style.display = "none";
-
-
-  let data2 = "";
-
-  data.data.map( (product) => {
-
-    data2 +=`
-
-    <div class="swiper-slide maabag_slides_down">
-    <div id="home_top_rated_div">
-        <img src="http://3.108.240.106:8097/hotels/displayHotelImage?id=${product.id}" class="home_top_img1" alt="image1">
-        <div class="top_visited_rating_div">
-            <i class="fa fa-star checked" id="icon"></i>
-            <span class="top_visited_rating_span">${product.rating}</span>
-        </div>
-        <p class="top_visited_hotel_name small_hotel_name"> ${product.hotelName}          </p>
-        <i class="fa fa-user" aria-hidden="true"></i>
-        <span class="top-visited-km">${product.totalPerson} </span>       <br>
-
-        <div class="price_book_holes_in_small">
-            <p class="hotel_price_in_small">&#8377;${product.price}</p>
-            <input type="button" class="small_hotel_book_btn" value="Book Hotel">
-        </div>
-        
-    </div>
-</div>
-  
-  
-    `;
-  
-            document.getElementById("swiper-wrapper_maabag_down").innerHTML = data2;
-            // console.log(data2);
-  
-          } )
-         
-
-
-})
-
-
-
-
-
-
-
-
-
-
   document.getElementById('sidebar').style.height = "715px";
   document.getElementById('MaaBaglamukhi-div').style.backgroundColor = "#FF5F1F";
   document.getElementById('MaaBaglamukhi-div').style.color = "white";
@@ -2752,48 +3343,229 @@ document
 
 function maabagFirstcard() {
 
-  document.getElementById('maabag_popup').style.display = "block";
-  document.getElementById('maabag_popupdiv').style.display = "block";
-  document.getElementById('maabagConfirmation_popupdiv').style.display = "none";
+  document.getElementsByClassName('Maabagla_btn')[0].addEventListener( "click",
+  function (){
+
+    document.getElementById('maabag_popup').style.display = "block";
+    document.getElementById('maabag_popupdiv').style.display = "block";
+    document.getElementById('maabagConfirmation_popupdiv').style.display = "none";
+
+      let name = document.getElementsByClassName('Maabagla_name')[0].innerHTML ;
+      fetch(`http://3.108.240.106:8097/maaBaglamukhi/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("MaabaglaID", data.data[0].id );
+      document.getElementsByClassName('mabaglaname')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('mabaglakm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('maabaglaprice')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('maabagla_totalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('maabagla_totalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let MaabaglaID = sessionStorage.getItem('MaabaglaID');
+    document.getElementsByClassName('mabagala_popupimg')[0].src = `http://3.108.240.106:8097/maaBaglamukhi/displayHotelImage?id=${MaabaglaID}`
+ 
+  })
+  });
+
+  document.getElementsByClassName('Maabagla_btn')[1].addEventListener( "click",
+  function (){
+
+    document.getElementById('maabag_popup').style.display = "block";
+    document.getElementById('maabag_popupdiv').style.display = "block";
+    document.getElementById('maabagConfirmation_popupdiv').style.display = "none";
+
+      let name = document.getElementsByClassName('Maabagla_name')[1].innerHTML ;
+      fetch(`http://3.108.240.106:8097/maaBaglamukhi/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("MaabaglaID", data.data[0].id );
+      document.getElementsByClassName('mabaglaname')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('mabaglakm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('maabaglaprice')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('maabagla_totalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('maabagla_totalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let MaabaglaID = sessionStorage.getItem('MaabaglaID');
+    document.getElementsByClassName('mabagala_popupimg')[0].src = `http://3.108.240.106:8097/maaBaglamukhi/displayHotelImage?id=${MaabaglaID}`
+ 
+  })
+  });
+
+  document.getElementsByClassName('Maabagla_btn')[2].addEventListener( "click",
+  function (){
+
+    document.getElementById('maabag_popup').style.display = "block";
+    document.getElementById('maabag_popupdiv').style.display = "block";
+    document.getElementById('maabagConfirmation_popupdiv').style.display = "none";
+
+      let name = document.getElementsByClassName('Maabagla_name')[0].innerHTML ;
+      fetch(`http://3.108.240.106:8097/maaBaglamukhi/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("MaabaglaID", data.data[0].id );
+      document.getElementsByClassName('mabaglaname')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('mabaglakm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('maabaglaprice')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('maabagla_totalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('maabagla_totalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let MaabaglaID = sessionStorage.getItem('MaabaglaID');
+    document.getElementsByClassName('mabagala_popupimg')[0].src = `http://3.108.240.106:8097/maaBaglamukhi/displayHotelImage?id=${MaabaglaID}`
+ 
+  })
+  });
+
+  document.getElementsByClassName('Maabagla_btn')[3].addEventListener( "click",
+  function (){
+
+    document.getElementById('maabag_popup').style.display = "block";
+    document.getElementById('maabag_popupdiv').style.display = "block";
+    document.getElementById('maabagConfirmation_popupdiv').style.display = "none";
+
+      let name = document.getElementsByClassName('Maabagla_name')[3].innerHTML ;
+      fetch(`http://3.108.240.106:8097/maaBaglamukhi/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("MaabaglaID", data.data[0].id );
+      document.getElementsByClassName('mabaglaname')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('mabaglakm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('maabaglaprice')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('maabagla_totalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('maabagla_totalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let MaabaglaID = sessionStorage.getItem('MaabaglaID');
+    document.getElementsByClassName('mabagala_popupimg')[0].src = `http://3.108.240.106:8097/maaBaglamukhi/displayHotelImage?id=${MaabaglaID}`
+ 
+  })
+  });
+
+
+  document.getElementsByClassName('Maabagla_btn')[4].addEventListener( "click",
+  function (){
+
+    document.getElementById('maabag_popup').style.display = "block";
+    document.getElementById('maabag_popupdiv').style.display = "block";
+    document.getElementById('maabagConfirmation_popupdiv').style.display = "none";
+
+      let name = document.getElementsByClassName('Maabagla_name')[4].innerHTML ;
+      fetch(`http://3.108.240.106:8097/maaBaglamukhi/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("MaabaglaID", data.data[0].id );
+      document.getElementsByClassName('mabaglaname')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('mabaglakm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('maabaglaprice')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('maabagla_totalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('maabagla_totalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let MaabaglaID = sessionStorage.getItem('MaabaglaID');
+    document.getElementsByClassName('mabagala_popupimg')[0].src = `http://3.108.240.106:8097/maaBaglamukhi/displayHotelImage?id=${MaabaglaID}`
+ 
+  })
+  });
+
+  document.getElementsByClassName('Maabagla_btn')[5].addEventListener( "click",
+  function (){
+
+    document.getElementById('maabag_popup').style.display = "block";
+    document.getElementById('maabag_popupdiv').style.display = "block";
+    document.getElementById('maabagConfirmation_popupdiv').style.display = "none";
+
+      let name = document.getElementsByClassName('Maabagla_name')[5].innerHTML ;
+      fetch(`http://3.108.240.106:8097/maaBaglamukhi/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("MaabaglaID", data.data[0].id );
+      document.getElementsByClassName('mabaglaname')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('mabaglakm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('maabaglaprice')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('maabagla_totalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('maabagla_totalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let MaabaglaID = sessionStorage.getItem('MaabaglaID');
+    document.getElementsByClassName('mabagala_popupimg')[0].src = `http://3.108.240.106:8097/maaBaglamukhi/displayHotelImage?id=${MaabaglaID}`
+ 
+  })
+  });
+
+  document.getElementsByClassName('Maabagla_btn')[6].addEventListener( "click",
+  function (){
+
+    document.getElementById('maabag_popup').style.display = "block";
+    document.getElementById('maabag_popupdiv').style.display = "block";
+    document.getElementById('maabagConfirmation_popupdiv').style.display = "none";
+
+      let name = document.getElementsByClassName('Maabagla_name')[6].innerHTML ;
+      fetch(`http://3.108.240.106:8097/maaBaglamukhi/GetByName/${name}`)
+     .then(response => response.json())
+     .then(data => {  console.log(data.data[0].name); 
+  
+      sessionStorage.setItem("MaabaglaID", data.data[0].id );
+      document.getElementsByClassName('mabaglaname')[0].innerHTML = data.data[0].name ;
+      document.getElementsByClassName('mabaglakm')[0].innerHTML = `${data.data[0].distance} km ` ;
+      document.getElementsByClassName('maabaglaprice')[0].innerHTML = `&#8377; ${data.data[0].price} `;
+      document.getElementsByClassName('maabagla_totalprice')[0].innerHTML = `&#8377; ${data.data[0].price} ` ;
+      document.getElementsByClassName('maabagla_totalprice')[1].innerHTML = `&#8377; ${data.data[0].price} ` ;
+    
+    // image fetch 
+    let MaabaglaID = sessionStorage.getItem('MaabaglaID');
+    document.getElementsByClassName('mabagala_popupimg')[0].src = `http://3.108.240.106:8097/maaBaglamukhi/displayHotelImage?id=${MaabaglaID}`
+ 
+  })
+  });
+
+
 
   // document.getElementsByClassName('Topvisited_maabag_btn')[0].style.backgroundColor = "#FF5F1F";
   // document.getElementsByClassName('Topvisited_maabag_btn')[0].style.color = "white";
 
 
       
-  fetch('http://3.108.240.106:8097/guide/AllGuides')
-  .then(response => response.json())
-  .then(data => {  console.log(data.data) 
+  // fetch('http://3.108.240.106:8097/guide/allGuides')
+  // .then(response => response.json())
+  // .then(data => {  console.log(data.data) 
   
-    let data2 = "";
+  //   let data2 = "";
   
-    data.data.map( (product) => {
+  //   data.data.map( (product) => {
   
-      data2 +=`
+  //     data2 +=`
   
-                <div class="puja_package_divs maabaglapackagediv">
-                <img class="Package_imgs" src="http://3.108.240.106:8097/guide/displayHotelImage?id=${product.id}" alt="" srcset="">
-                <div>  
-                    <span class="omkarpujaNames">${product.name}</span>
-                    <div class="dis_price_div" >
-                        <img class="Package_location_img" src="../Images/destination_popup_icon.png" style="width: 19px;"  alt="" >
-                        <span class="Package_templeName" style="font-size: 11px;">${product.distance} km</span>
-                        <span class="Package_pricenum "  >&#8377; <span class="maabaglaprice"> ${product.price}</span>  </span>
-                    </div>
-                </div>
-                    <img class="maabagla_deleteicon" id="maabagladelete"  onclick="delete_maabaglacard()"  src="../Images/delete_icon.png" alt="">
-            </div>
+  //               <div class="puja_package_divs maabaglapackagediv">
+  //               <img class="Package_imgs" src="http://3.108.240.106:8097/guide/displayHotelImage?id=${product.id}" alt="" srcset="">
+  //               <div>  
+  //                   <span class="omkarpujaNames">${product.name}</span>
+  //                   <div class="dis_price_div" >
+  //                       <img class="Package_location_img" src="../Images/destination_popup_icon.png" style="width: 19px;"  alt="" >
+  //                       <span class="Package_templeName" style="font-size: 11px;">${product.distance} km</span>
+  //                       <span class="Package_pricenum "  >&#8377; <span class="maabaglaprice"> ${product.price}</span>  </span>
+  //                   </div>
+  //               </div>
+  //                   <img class="maabagla_deleteicon" id="maabagladelete"  onclick="delete_maabaglacard()"  src="../Images/delete_icon.png" alt="">
+  //           </div>
   
-       `;
+  //      `;
     
-              document.getElementById("maabagla_guides_packages_divs").innerHTML = data2;
+  //             document.getElementById("maabagla_guides_packages_divs").innerHTML = data2;
           
-            } )
+  //           } )
 
-            add_maabaglaprice()
+  //           add_maabaglaprice()
 
-            document.getElementById("maabagladelete").click();
-  })
+  //           document.getElementById("maabagladelete").click();
+  // })
   
 
 }
@@ -2875,27 +3647,27 @@ function delete_maabaglacard(){
 
 // adding Maabagla  prices ....
 
-function add_maabaglaprice(){
-  let a = parseInt(document.getElementsByClassName('maabaglaprice')[0].innerHTML);
-  let b = parseInt( document.getElementsByClassName('maabaglaprice')[1].innerHTML);
-  let c = parseInt( document.getElementsByClassName('maabaglaprice')[2].innerHTML);
-  // let d = parseInt(document.getElementsByClassName('maabaglaprice')[3].innerHTML);
-  // let e = parseInt( document.getElementsByClassName('maabaglaprice')[4].innerHTML);
-  // let f = parseInt( document.getElementsByClassName('maabaglaprice')[5].innerHTML);
-  // let g = parseInt(document.getElementsByClassName('maabaglaprice')[6].innerHTML);
-  // let h = parseInt( document.getElementsByClassName('maabaglaprice')[7].innerHTML);
-  // let i = parseInt( document.getElementsByClassName('maabaglaprice')[8].innerHTML);   // 09 
-  // let j = parseInt(document.getElementsByClassName('maabaglaprice')[9].innerHTML);    // 10 
- // let k = parseInt( document.getElementsByClassName('omkarprice')[1].innerHTML);   //11 product is add enable this
-  // let l = parseInt( document.getElementsByClassName('omkarprice')[2].innerHTML);
-let sum = a+b+c;
+// function add_maabaglaprice(){
+//   let a = parseInt(document.getElementsByClassName('maabaglaprice')[0].innerHTML);
+//   let b = parseInt( document.getElementsByClassName('maabaglaprice')[1].innerHTML);
+//   let c = parseInt( document.getElementsByClassName('maabaglaprice')[2].innerHTML);
+//   let d = parseInt(document.getElementsByClassName('maabaglaprice')[3].innerHTML);
+//   let e = parseInt( document.getElementsByClassName('maabaglaprice')[4].innerHTML);
+//   let f = parseInt( document.getElementsByClassName('maabaglaprice')[5].innerHTML);
+//   let g = parseInt(document.getElementsByClassName('maabaglaprice')[6].innerHTML);
+//   let h = parseInt( document.getElementsByClassName('maabaglaprice')[7].innerHTML);
+//   let i = parseInt( document.getElementsByClassName('maabaglaprice')[8].innerHTML);   // 09 
+//   let j = parseInt(document.getElementsByClassName('maabaglaprice')[9].innerHTML);    // 10 
+//  // let k = parseInt( document.getElementsByClassName('omkarprice')[1].innerHTML);   //11 product is add enable this
+//   // let l = parseInt( document.getElementsByClassName('omkarprice')[2].innerHTML);
+//   let sum = a+b+c+d+e+f+g+h+i+j ;
 
-document.getElementsByClassName('maabagla_totalprice')[0].innerHTML = sum ;
-document.getElementsByClassName('maabagla_totalprice')[1].innerHTML = sum ;
+// document.getElementsByClassName('maabagla_totalprice')[0].innerHTML = sum ;
+// document.getElementsByClassName('maabagla_totalprice')[1].innerHTML = sum ;
 
-console.log(sum)
+// console.log(sum)
 
-}
+// }
 
 
 
@@ -2937,7 +3709,7 @@ function TaxiServices(){
       data = Object.fromEntries(formData);
       console.log(data);
       var user_id = localStorage.getItem('User-ID');
-      fetch(`http://3.108.240.106:8097/taxiservice/save/${user_id}`,
+      fetch(`http://3.108.240.106:8097/taxiService/save/${user_id}`,
      
           {
               method: "POST",
@@ -3129,7 +3901,7 @@ function AirportRides(){
       data1 = Object.fromEntries(formData1);
       console.log(data1);
       var user_id = localStorage.getItem('User-ID');
-      fetch(`http://3.108.240.106:8097/airportrides/save/${user_id}`,
+      fetch(`http://3.108.240.106:8097/airportRides/save/${user_id}`,
           {
               method: "POST",
               body: JSON.stringify({
@@ -3330,42 +4102,6 @@ function Shopping(){
 
 
 
-
-document.getElementById('Shopping_loader').style.display = "block";
-
-  fetch('http://3.108.240.106:8097/shopping/getall/product')
-  .then(response => response.json())
-  .then(data => {  console.log(data.data) 
-  
-    document.getElementById('Shopping_loader').style.display = "none";
-
-    let data2 = "";
-  
-    data.data.map( (product) => {
-  
-      data2 +=`
-
-
-      <div class="swiper-slide swiper-slide-active shopping_slides" role="group" aria-label="1 / 7" >
-        <div class="Ujjain_FamousPujas_div shoppingdivs_contents">
-            <img src="http://3.108.240.106:8097/shopping/displayHotelImage?id=${product.id}" class="Ujjain_FamousPujas_imgs shopimg" alt=""
-                srcset="">
-            <p class="Famous_puja_name">${product.name}</p>
-            <span class="Famous_puja_price shopprice">&#8377; ${product.price} </span>
-            <input type="button" class="Famous_puja_booknow_btn shopbtn" onclick="shoppingpopup_packageBooking_btn()" value="Book Now">
-        </div>
-     </div>
-
-
-
-      `;
-    
-              document.getElementById("swiper-wrapper_shopping_down").innerHTML = data2;
-              // console.log(data2);
-    
-            } )
-  
-  })
   
   
 
@@ -3374,23 +4110,21 @@ document.getElementById('Shopping_loader').style.display = "block";
 
 
  
-function shoppingpopup_packageBooking_btn(){
+function shopping_btn(){
  
-  document.getElementById('profile-update-container').style.display = "none";
-  document.getElementById('shopping_popup').style.display = "block";
-  document.getElementById('shopping_main').style.display = "block";
-  document.getElementById('shoppingConfirmation_popup_div').style.display = "none";
-
+ 
   // -------shopping items couting --------
 let remove = document.getElementById('minus01');
 let add = document.getElementById('plus01');
  
 let int = document.getElementById('number');
-let integer = 1;
+let integer = 0;
  
 add.addEventListener('click',function() {
+
   integer++;
   int.innerHTML = integer;
+
  
 });
  
@@ -3402,7 +4136,366 @@ remove.addEventListener('click',function() {
  
 });
 // --------------------------------------------------
- 
+
+
+document.getElementsByClassName('shopbtn')[0].addEventListener('click',
+  function(){
+
+    document.getElementById('profile-update-container').style.display = "none";
+    document.getElementById('shopping_popup').style.display = "block";
+    document.getElementById('shopping_main').style.display = "block";
+    document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+    let shopName = document.getElementsByClassName('shopping_name')[0].innerHTML;
+
+    fetch(`http://3.108.240.106:8097/shopping/getProductByName/${shopName}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.data[0]);  
+      sessionStorage.setItem('shoppingId', data.data[0].id);
+    document.getElementById('shopping_name_inpoup').innerHTML = data.data[0].name;
+    document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data[0].price;
+
+    let shop_popup_img = document.getElementsByClassName('shopimg')[0].src;
+    
+    document.getElementById('shopping_poup_img').src = shop_popup_img ;
+    })
+
+  });
+
+  document.getElementsByClassName('shopbtn')[1].addEventListener('click',
+  function(){
+
+   
+    document.getElementById('profile-update-container').style.display = "none";
+    document.getElementById('shopping_popup').style.display = "block";
+    document.getElementById('shopping_main').style.display = "block";
+    document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+    let shopName = document.getElementsByClassName('shopping_name')[1].innerHTML;
+
+    fetch(`http://3.108.240.106:8097/shopping/getProductByName/${shopName}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.data[0]);  
+      sessionStorage.setItem('shoppingId', data.data[0].id);
+    document.getElementById('shopping_name_inpoup').innerHTML = data.data[0].name;
+    document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data[0].price;
+
+    let shop_popup_img = document.getElementsByClassName('shopimg')[1].src;
+    
+    document.getElementById('shopping_poup_img').src = shop_popup_img ;
+    })
+
+  });
+
+  document.getElementsByClassName('shopbtn')[2].addEventListener('click',
+  function(){
+
+   
+    document.getElementById('profile-update-container').style.display = "none";
+    document.getElementById('shopping_popup').style.display = "block";
+    document.getElementById('shopping_main').style.display = "block";
+    document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+    let shopName = document.getElementsByClassName('shopping_name')[2].innerHTML;
+
+    fetch(`http://3.108.240.106:8097/shopping/getProductByName/${shopName}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.data[0]);  
+      sessionStorage.setItem('shoppingId', data.data[0].id);
+    document.getElementById('shopping_name_inpoup').innerHTML = data.data[0].name;
+    document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data[0].price;
+
+    let shop_popup_img = document.getElementsByClassName('shopimg')[2].src;
+    
+    document.getElementById('shopping_poup_img').src = shop_popup_img ;
+    })
+
+  });
+
+  document.getElementsByClassName('shopbtn')[3].addEventListener('click',
+  function(){
+
+   
+    document.getElementById('profile-update-container').style.display = "none";
+    document.getElementById('shopping_popup').style.display = "block";
+    document.getElementById('shopping_main').style.display = "block";
+    document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+    let shopName = document.getElementsByClassName('shopping_name')[3].innerHTML;
+
+    fetch(`http://3.108.240.106:8097/shopping/getProductByName/${shopName}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.data[0]);  
+      sessionStorage.setItem('shoppingId', data.data[0].id);
+    document.getElementById('shopping_name_inpoup').innerHTML = data.data[0].name;
+    document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data[0].price;
+
+    let shop_popup_img = document.getElementsByClassName('shopimg')[3].src;
+    
+    document.getElementById('shopping_poup_img').src = shop_popup_img ;
+    })
+
+  });
+
+  document.getElementsByClassName('shopbtn')[4].addEventListener('click',
+  function(){
+
+    document.getElementById('profile-update-container').style.display = "none";
+    document.getElementById('shopping_popup').style.display = "block";
+    document.getElementById('shopping_main').style.display = "block";
+    document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+    let shopName = document.getElementsByClassName('shopping_name')[4].innerHTML;
+
+    fetch(`http://3.108.240.106:8097/shopping/getProductByName/${shopName}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.data[0]);  
+      sessionStorage.setItem('shoppingId', data.data[0].id);
+    document.getElementById('shopping_name_inpoup').innerHTML = data.data[0].name;
+    document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data[0].price;
+
+    let shop_popup_img = document.getElementsByClassName('shopimg')[4].src;
+    
+    document.getElementById('shopping_poup_img').src = shop_popup_img ;
+    })
+
+  });
+
+  document.getElementsByClassName('shopbtn')[5].addEventListener('click',
+  function(){
+
+   
+    document.getElementById('profile-update-container').style.display = "none";
+    document.getElementById('shopping_popup').style.display = "block";
+    document.getElementById('shopping_main').style.display = "block";
+    document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+    let shopName = document.getElementsByClassName('shopping_name')[5].innerHTML;
+
+    fetch(`http://3.108.240.106:8097/shopping/getProductByName/${shopName}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.data[0]);  
+      sessionStorage.setItem('shoppingId', data.data[0].id);
+    document.getElementById('shopping_name_inpoup').innerHTML = data.data[0].name;
+    document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data[0].price;
+
+    let shop_popup_img = document.getElementsByClassName('shopimg')[5].src;
+    
+    document.getElementById('shopping_poup_img').src = shop_popup_img ;
+    })
+
+  });
+
+  document.getElementsByClassName('shopbtn')[6].addEventListener('click',
+  function(){
+
+   
+    document.getElementById('profile-update-container').style.display = "none";
+    document.getElementById('shopping_popup').style.display = "block";
+    document.getElementById('shopping_main').style.display = "block";
+    document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+    let shopName = document.getElementsByClassName('shopping_name')[6].innerHTML;
+
+    fetch(`http://3.108.240.106:8097/shopping/getProductByName/${shopName}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.data[0]);  
+      sessionStorage.setItem('shoppingId', data.data[0].id);
+    document.getElementById('shopping_name_inpoup').innerHTML = data.data[0].name;
+    document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data[0].price;
+
+    let shop_popup_img = document.getElementsByClassName('shopimg')[6].src;
+    
+    document.getElementById('shopping_poup_img').src = shop_popup_img ;
+    })
+
+  });
+
+  document.getElementsByClassName('shopbtn')[7].addEventListener('click',
+  function(){
+
+   
+    document.getElementById('profile-update-container').style.display = "none";
+    document.getElementById('shopping_popup').style.display = "block";
+    document.getElementById('shopping_main').style.display = "block";
+    document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+    let shopName = document.getElementsByClassName('shopping_name')[7].innerHTML;
+
+    fetch(`http://3.108.240.106:8097/shopping/getProductByName/${shopName}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.data[0]);  
+      sessionStorage.setItem('shoppingId', data.data[0].id);
+    document.getElementById('shopping_name_inpoup').innerHTML = data.data[0].name;
+    document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data[0].price;
+
+    let shop_popup_img = document.getElementsByClassName('shopimg')[7].src;
+    
+    document.getElementById('shopping_poup_img').src = shop_popup_img ;
+    })
+
+  });
+  
+
+  document.getElementsByClassName('shopbtn')[8].addEventListener('click',
+  function(){
+
+   
+    document.getElementById('profile-update-container').style.display = "none";
+    document.getElementById('shopping_popup').style.display = "block";
+    document.getElementById('shopping_main').style.display = "block";
+    document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+    let shopName = document.getElementsByClassName('shopping_name')[8].innerHTML;
+
+    fetch(`http://3.108.240.106:8097/shopping/getProductByName/${shopName}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.data[0]);  
+      sessionStorage.setItem('shoppingId', data.data[0].id);
+    document.getElementById('shopping_name_inpoup').innerHTML = data.data[0].name;
+    document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data[0].price;
+    document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data[0].price;
+
+    let shop_popup_img = document.getElementsByClassName('shopimg')[8].src;
+    
+    document.getElementById('shopping_poup_img').src = shop_popup_img ;
+    })
+
+  });
+
+
+
+// document.getElementsByClassName('shopbtn')[1].addEventListener('click',
+// function(){
+//   sessionStorage.setItem('shoppingId', 12);
+//   document.getElementById('profile-update-container').style.display = "none";
+//   document.getElementById('shopping_popup').style.display = "block";
+//   document.getElementById('shopping_main').style.display = "block";
+//   document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+//   fetch('http://3.108.240.106:8097/shopping/getProductById/12')
+//   .then(response => response.json())
+//   .then(data => {
+//     console.log(data.data);  
+//   document.getElementById('shopping_name_inpoup').innerHTML = data.data.name;
+//   document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data.price;
+//   document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data.price;
+//   document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data.price;
+
+  
+//   document.getElementById('shopping_poup_img').src = "http://3.108.240.106:8097/shopping/displayProductImage?id=12"
+//   })
+
+// });
+
+
+// document.getElementsByClassName('shopbtn')[2].addEventListener('click',
+//   function(){
+//     sessionStorage.setItem('shoppingId', 13);
+//     document.getElementById('profile-update-container').style.display = "none";
+//     document.getElementById('shopping_popup').style.display = "block";
+//     document.getElementById('shopping_main').style.display = "block";
+//     document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+//     fetch('http://3.108.240.106:8097/shopping/getProductById/13')
+//     .then(response => response.json())
+//     .then(data => {
+//       console.log(data.data);  
+//     document.getElementById('shopping_name_inpoup').innerHTML = data.data.name;
+//     document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data.price;
+//     document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data.price;
+//     document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data.price;
+
+    
+//     document.getElementById('shopping_poup_img').src = "http://3.108.240.106:8097/shopping/displayProductImage?id=13"
+//     })
+
+//   });
+
+//   document.getElementsByClassName('shopbtn')[3].addEventListener('click',
+//   function(){
+//     sessionStorage.setItem('shoppingId', 14);
+//     document.getElementById('profile-update-container').style.display = "none";
+//     document.getElementById('shopping_popup').style.display = "block";
+//     document.getElementById('shopping_main').style.display = "block";
+//     document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+//     fetch('http://3.108.240.106:8097/shopping/getProductById/14')
+//     .then(response => response.json())
+//     .then(data => {
+//       console.log(data.data);  
+//     document.getElementById('shopping_name_inpoup').innerHTML = data.data.name;
+//     document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data.price;
+//     document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data.price;
+//     document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data.price;
+
+    
+//     document.getElementById('shopping_poup_img').src = "http://3.108.240.106:8097/shopping/displayProductImage?id=14"
+//     })
+
+//   });
+
+//   document.getElementsByClassName('shopbtn')[4].addEventListener('click',
+//   function(){
+//     sessionStorage.setItem('shoppingId', 15);
+//     document.getElementById('profile-update-container').style.display = "none";
+//     document.getElementById('shopping_popup').style.display = "block";
+//     document.getElementById('shopping_main').style.display = "block";
+//     document.getElementById('shoppingConfirmation_popup_div').style.display = "none";  
+
+//     fetch('http://3.108.240.106:8097/shopping/getProductById/15')
+//     .then(response => response.json())
+//     .then(data => {
+//       console.log(data.data);  
+//     document.getElementById('shopping_name_inpoup').innerHTML = data.data.name;
+//     document.getElementsByClassName('shopping_popup_price')[0].innerHTML = data.data.price;
+//     document.getElementsByClassName('shopping_popup_price')[1].innerHTML = data.data.price;
+//     document.getElementsByClassName('shopping_popup_price')[2].innerHTML = data.data.price;
+
+    
+//     document.getElementById('shopping_poup_img').src = "http://3.108.240.106:8097/shopping/displayProductImage?id=15"
+//     })
+
+//   });
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
@@ -3415,6 +4508,39 @@ function shopconfirmation(){
   document.getElementById('shopPackageBooking_popupdiv').style.display = "none";
   document.getElementById('shopping_main').style.display = "block";
   document.getElementById('shoppingConfirmation_popup_div').style.display = "block";
+
+
+
+  var shoppingID = sessionStorage.getItem('shoppingId');
+  var user_id = localStorage.getItem('User-ID');
+ 
+   var formdata = new FormData();
+   formdata.append("userId", user_id);
+   formdata.append("shoppingId", shoppingID);
+   
+   var requestOptions = {
+     method: 'POST',
+     body: formdata,
+     redirect: 'follow'
+   };
+   
+   fetch("http://3.108.240.106:8097/admin/api/shop/book", requestOptions)
+     .then(response => response.json())
+     .then(result => {console.log(result)  
+    
+        // document.getElementById('omkarConfirmation_popupdiv').style.display = "block";
+        // document.getElementById('omkar_popupdiv').style.display = "none";
+
+    })
+     .catch(error => console.log('error', error));
+ 
+
+
+
+
+
+
+
  
 }
 
@@ -3426,14 +4552,14 @@ function shoppingBooking_closePopUp() {
 
 }
 
-function ujjainConfirmation_closePopUp() {
+function ShoppingConfirmation_closePopUp() {
   document.getElementById('profile-update-container').style.display = "none";
   document.getElementById('shopping_popup').style.display = "none";
   document.getElementById('shopping_main').style.display = "block";
   document.getElementById('shoppingConfirmation_popup_div').style.display = "none";
  
  
-}
+ }
 
 
 

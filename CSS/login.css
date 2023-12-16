@@ -1,7 +1,9 @@
 
 
 body{
-    font-family: 'Roboto';
+    /* font-family: 'Roboto'; */
+    font-family: Inter,sans-serif !important;
+
 }
 
 #main-sec {
@@ -14,6 +16,12 @@ body{
     margin-top: 20px;
     margin-left: 60px;
 }
+
+
+input[type="number"]::-webkit-inner-spin-button {
+    display: none;
+}
+
 
 
 
@@ -130,6 +138,7 @@ body{
 
 #ujjain-dharshan {
     font-size: 50px;
+    font-family: Aventi;
     font-weight: bolder;
     color: #ff5c02;
     margin-top: 0px;
@@ -212,7 +221,17 @@ body{
     height: 20px;
     margin-top: 15px;
 }
-
+.mobile_no_inputs{
+    width: 300px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    border: solid 1px #ff5c02;
+    border-radius: 5px;
+    color: #ff5c02;
+    height: 20px;
+    margin-top: 15px;
+}
 #Password {
     width: 300px;
     padding-top: 10px;

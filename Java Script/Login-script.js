@@ -1,6 +1,16 @@
 
-
 window.onload = function () {
+
+
+    
+document.querySelectorAll('input[type="number"]').forEach( input => {
+    input.oninput = () =>{
+        if(input.value.length > input.maxLength) input.value = input.value.slice(0,input.maxLength);
+    }; 
+})
+    
+
+
 
     let slideIndex = 0;
     showSlides();
@@ -74,7 +84,7 @@ function Login() {
                     localStorage.setItem('Login-MobileNumber', data.data.mobileNo);
                     localStorage.setItem('Login-Email', data.data.email);
                     localStorage.setItem('User-ID',data.data.userId );
-                    localStorage.setItem('JWT_Token', data.data.jwtToken)
+                   // localStorage.setItem('JWT_Token', data.data.jwtToken)
                     
                     var name = localStorage.getItem('Login-UserName');
                     var email = localStorage.getItem('Login-Email');
@@ -93,11 +103,11 @@ function Login() {
 
                 };
 
-                if (isTokenExpired(JwtToken))
-                 {     // Token is expired, redirect to login page or handle reauthentication 
+                // if (isTokenExpired(JwtToken))
+                //  {     // Token is expired, redirect to login page or handle reauthentication 
 
-                       window.location.href = "login.html";  
-                      return Promise.reject('Token expired');   }
+                //        window.location.href = "login.html";  
+                //       return Promise.reject('Token expired');   }
 
 
 
@@ -126,6 +136,11 @@ function show_password_login() {
     }
 
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 
@@ -263,7 +278,9 @@ function Reset() {
         console.log(data);
 
         fetch('http://3.108.240.106:8097/user/resetPassword', {
+            
             method: 'PATCH',
+            
             body: JSON.stringify({
 
                 "mobileNumber": data.mobilenumber,
@@ -308,8 +325,49 @@ function Reset_succesfull_msg() {
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+// Mobile  Number min digits error ....
+
+function myFunction() {
+    const inpObj = document.getElementsByClassName('Mobile_number_inputs')[0];
+    if (!inpObj.checkValidity()) {
+        document.getElementById("login_error_msg").style.display = "block";
+      document.getElementById("login_error_msg").innerHTML = "Number should be 10 digits";
+    } else {
+        document.getElementById("login_error_msg").style.display = "none";
+    //   document.getElementById("demo").innerHTML = "Input OK";
+    } 
+}
+
+function myReg_Mobile_no(){
+    
+
+    const inpOb = document.getElementsByClassName('Mobile_number_inputs')[1];
+    if (!inpOb.checkValidity()) {
+        document.getElementById("error_message").style.display = "block";
+      document.getElementById("error_message").innerHTML = "Number should be 10 digits";
+    } else {
+        document.getElementById("error_message").style.display = "none";
+    //   document.getElementById("demo").innerHTML = "Input OK";
+    }
+
+
+  }
+
+  function myReset_Mobile_no(){
+
+    const inpOb = document.getElementsByClassName('Mobile_number_inputs')[2];
+    if (!inpOb.checkValidity()) {
+        document.getElementById("Reset_error_msg").style.display = "block";
+      document.getElementById("Reset_error_msg").innerHTML = "Number should be 10 digits";
+    } else {
+        document.getElementById("Reset_error_msg").style.display = "none";
+    //   document.getElementById("demo").innerHTML = "Input OK";
+    }
+
+  }
 
 
 

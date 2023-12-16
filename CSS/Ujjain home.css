@@ -4,15 +4,23 @@
 
 body {
     margin: 0;
-    font-family: 'Roboto';
+    /* font-family: 'Roboto'; */
+    font-family: Inter, sans-serif !important;
     height: 750px;
     position: relative;
 
 }
 
+
+
 ol{
-    font-family: sans-serif;
+    font-family: Inter, sans-serif ;
 }
+
+input[type="number"]::-webkit-inner-spin-button {
+    display: none;
+}
+
 
 
 /* img  Loader  while fetching data from API CSS...     */
@@ -226,7 +234,7 @@ ol{
 
 
     width: 1170px;
-    height: 700px;
+    height: 1040px;
     margin-top: 30px;
     margin-left: 30px;
   
@@ -234,7 +242,7 @@ ol{
 
 #profile_div {
     width: 350px;
-    height: 650px;
+    height: 1040px;
     padding: 15px;
     padding-top: 0px;
     margin-right: 20px;
@@ -374,6 +382,9 @@ ol{
     justify-content: space-around;
 
 }
+#shopdiv_parent{
+    margin-top: 20px;
+}
 
 #profile_div2 {
     display: flex;
@@ -410,6 +421,7 @@ ol{
     width: 280px;
     overflow-x: hidden;
     overflow-y: scroll;
+    margin-left: 20px;
 }
 .All_bookings_scroll::-webkit-scrollbar{    display: none;  }
 .child_divs {
@@ -1010,26 +1022,53 @@ ol{
     }
 
     100% {
-        transform: translateX(calc(-250px * 5));
+        transform: translateX(calc(-250px * 5));    
     }
 }
 
 #Book_hotel_name {
     display: inline-block;
-    width: 420px;
-    font-size: 30px;
+    /* width: 420px; */
+    font-size: 40px;
     color: #ff5c02;
     font-weight: bold;
     margin-top: 0px;
-    margin-right: 280px;
+    margin-right: 10px;
     margin-left: 30px;
+    font-style: italic;
+}
+#Hotel_type_hotelbkg{
+    color: #000;
+    font-size: 20px;
+    margin-right: 20px;
+    display: inline-block;
+    width: 80px;
+    height: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-right: solid;
+    border-left: solid;
 }
 
+#Hotel_type_hotelbkgin_popup{
+
+    color: #000;
+    font-size: 15px;
+    margin-right: 20px;
+    display: inline-block;
+    width: 80px;
+    height: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    /* border-right: solid;
+    border-left: solid; */
+
+}
 #Book_hotel_price {
     color: #000;
-    font-size: 40px;
+    font-size: 23px;
     font-weight: bold;
-    float: inline-end;
+    /* float: inline-end; */
 }
 
 #Book_hotel_facilities {
@@ -1094,6 +1133,16 @@ ol{
     
     font-size: xx-large;
     float: inline-end;
+}
+
+.error_msg_inHome{
+    display: none;
+    color: red;
+    font-weight: 600;
+}
+#hotel_save_eror{
+    
+    margin-top: 0px;
 }
 .HotelBooking_popup_div {
 
@@ -1168,7 +1217,11 @@ ol{
     font-weight: 600;
     margin-left: 2px;
 }
-
+.hotel_type{
+    margin-left: 92px;
+    color: #FF5F1F;
+    font-size: large;
+}
 .popup_des_img {
     position: relative;
     width: 36px;
@@ -1670,6 +1723,7 @@ ol{
 /* puja swiper down */
 
 #swiper_puja_down {
+    width: 1170px !important;
     left: 10px;
     margin-left: auto;
     margin-right: auto;
@@ -1719,7 +1773,9 @@ ol{
 }
 
 
-
+.ujjainFamous_puja{
+    width: 200px !important;
+}
 
 .Ujjain_FamousPujas_divs {
     display: flex;
@@ -3336,6 +3392,7 @@ ol{
     top: 85px;
     right: 100px;
     z-index: 12;
+    padding: 10px;
     border-radius: 15px;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
     background-color: #fff;
